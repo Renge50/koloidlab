@@ -229,15 +229,11 @@ nav {
 <body>
 <div id="app">
 
-<!-- ═══ TOP NAV ═══ -->
 <nav>
   <div class="nav-logo">Koloid<span>Lab</span></div>
   <div class="nav-steps" id="navSteps"></div>
 </nav>
 
-<!-- ═══ PAGES ═══ -->
-
-<!-- PAGE: BERANDA -->
 <div class="page active" id="page-home">
   <div class="hero-section">
     <div class="page-badge">⚗️ Media Pembelajaran Interaktif · Kimia SMA</div>
@@ -256,7 +252,6 @@ nav {
   </div>
 </div>
 
-<!-- PAGE: ABSENSI -->
 <div class="page" id="page-absensi">
   <div class="page-header">
     <div class="page-badge">📋 Langkah Pertama</div>
@@ -304,7 +299,6 @@ nav {
   </div>
 </div>
 
-<!-- PAGE: PRETEST -->
 <div class="page" id="page-pretest">
   <div class="page-header">
     <div class="page-badge">📝 Sebelum Belajar</div>
@@ -316,7 +310,6 @@ nav {
   </div>
 </div>
 
-<!-- PAGE: PETUNJUK -->
 <div class="page" id="page-petunjuk">
   <div class="page-header">
     <div class="page-badge">📌 Panduan</div>
@@ -337,7 +330,6 @@ nav {
   </div>
 </div>
 
-<!-- PAGE: PERTEMUAN 1 — MATERI -->
 <div class="page" id="page-p1-materi">
   <div class="page-header">
     <div class="page-badge">📚 Pertemuan 1</div>
@@ -403,7 +395,7 @@ nav {
       <div class="sifat-item"><div class="sifat-icon">🔦</div><div><h5>Efek Tyndall</h5><p>Penghamburan cahaya oleh partikel koloid. Contoh: berkas cahaya terlihat jelas menembus kabut atau asap.</p></div></div>
       <div class="sifat-item"><div class="sifat-icon">🎲</div><div><h5>Gerak Brown</h5><p>Gerakan acak partikel koloid akibat tumbukan dengan molekul medium. Menyebabkan koloid tidak mudah mengendap.</p></div></div>
       <div class="sifat-item"><div class="sifat-icon">⚡</div><div><h5>Elektroforesis</h5><p>Pergerakan partikel koloid bermuatan dalam medan listrik. Digunakan untuk memisahkan protein dalam laboratorium.</p></div></div>
-      <div class="sifat-item"><div class="sifat-icon">🧲</div><h5></h5><div><h5>Adsorpsi & Koagulasi</h5><p>Adsorpsi: partikel koloid menyerap ion di permukaannya. Koagulasi: penggumpalan koloid akibat penetralan muatan.</p></div></div>
+      <div class="sifat-item"><div class="sifat-icon">🧲</div><div><h5>Adsorpsi & Koagulasi</h5><p>Adsorpsi: partikel koloid menyerap ion di permukaannya. Koagulasi: penggumpalan koloid akibat penetralan muatan.</p></div></div>
       <div class="sifat-item"><div class="sifat-icon">🛡️</div><div><h5>Koloid Pelindung</h5><p>Koloid yang mencegah koloid lain dari koagulasi. Contoh: gelatin dalam es krim mencegah pemisahan fase.</p></div></div>
       <div class="sifat-item"><div class="sifat-icon">🧫</div><div><h5>Dialisis</h5><p>Proses pemurnian koloid dari ion-ion pengganggu menggunakan membran semipermeabel.</p></div></div>
     </div>
@@ -415,7 +407,6 @@ nav {
   </div>
 </div>
 
-<!-- PAGE: PERTEMUAN 1 — RICOSRE -->
 <div class="page" id="page-p1-ricosre">
   <div class="page-header">
     <div class="page-badge">🧪 RICOSRE — Pertemuan 1</div>
@@ -425,12 +416,10 @@ nav {
 
   <div class="step-indicator" id="p1StepIndicator"></div>
 
-  <!-- STEP PAGES inside RICOSRE P1 -->
   <div id="p1-step-content"></div>
   <div class="btn-row" style="margin-top:1.5rem;" id="p1StepNav"></div>
 </div>
 
-<!-- PAGE: PERTEMUAN 2 — MATERI -->
 <div class="page" id="page-p2-materi">
   <div class="page-header">
     <div class="page-badge">📚 Pertemuan 2</div>
@@ -479,7 +468,6 @@ nav {
   </div>
 </div>
 
-<!-- PAGE: PERTEMUAN 2 — RICOSRE -->
 <div class="page" id="page-p2-ricosre">
   <div class="page-header">
     <div class="page-badge">🧪 RICOSRE — Pertemuan 2</div>
@@ -492,7 +480,6 @@ nav {
   <div class="btn-row" style="margin-top:1.5rem;" id="p2StepNav"></div>
 </div>
 
-<!-- PAGE: POSTTEST -->
 <div class="page" id="page-posttest">
   <div class="page-header">
     <div class="page-badge">🏁 Evaluasi Akhir</div>
@@ -504,7 +491,6 @@ nav {
   </div>
 </div>
 
-<!-- PAGE: PROFIL -->
 <div class="page" id="page-profil">
   <div class="page-header">
     <div class="page-badge">👤 Profil</div>
@@ -515,24 +501,24 @@ nav {
   </div>
 </div>
 
-</div><!-- /app -->
-
-<script>
+</div><script>
 // ═══════════════════════════════════════════
 //  STATE
 // ═══════════════════════════════════════════
 const state = {
-  siswa: null,           // {name, no, kelas, pertemuan}
+  siswa: null,
   pretestDone: false,
   pretestScore: 0,
+  pretestAnswers: [],
   p1MateriDone: false,
-  p1RicosreStep: 0,      // 0-5 (current step), 6 = done
-  p1RicoAnswers: {},     // {step: answer}
+  p1RicosreStep: 0,
+  p1RicoAnswers: {},
   p2MateriDone: false,
   p2RicosreStep: 0,
   p2RicoAnswers: {},
   posttestDone: false,
   posttestScore: 0,
+  posttestAnswers: [],
   currentPage: 'home',
 };
 
@@ -593,7 +579,6 @@ function goPage(id) {
   updateHomeCards();
   window.scrollTo(0, 0);
 
-  // Init page-specific
   if(id === 'pretest' && !state.pretestDone) renderQuiz('pretest');
   if(id === 'posttest' && !state.posttestDone) renderQuiz('posttest');
   if(id === 'p1-ricosre') renderRicosre(1);
@@ -601,19 +586,16 @@ function goPage(id) {
   if(id === 'profil') renderProfil();
 }
 
-// ═══════════════════════════════════════════
-//  HOME CARDS
-// ═══════════════════════════════════════════
 function updateHomeCards() {
   const items = [
-    { id:'absensi', icon:'📋', label:'Absensi', desc:'Daftar kehadiranmu', always:true },
-    { id:'petunjuk', icon:'📌', label:'Petunjuk', desc:'Panduan penggunaan', always:true },
-    { id:'pretest', icon:'📝', label:'Pretest', desc:'Tes pengetahuan awal', always:false },
-    { id:'p1-materi', icon:'📚', label:'Materi 1', desc:'Sistem & sifat koloid', always:false },
-    { id:'p1-ricosre', icon:'🧪', label:'RICOSRE 1', desc:'Tahapan ilmiah sesi 1', always:false },
-    { id:'p2-materi', icon:'📚', label:'Materi 2', desc:'Pembuatan koloid', always:false },
-    { id:'p2-ricosre', icon:'🧪', label:'RICOSRE 2', desc:'Tahapan ilmiah sesi 2', always:false },
-    { id:'posttest', icon:'🏁', label:'Posttest', desc:'Evaluasi akhir', always:false },
+    { id:'absensi', icon:'📋', label:'Absensi', desc:'Daftar kehadiranmu' },
+    { id:'petunjuk', icon:'📌', label:'Petunjuk', desc:'Panduan penggunaan' },
+    { id:'pretest', icon:'📝', label:'Pretest', desc:'Tes pengetahuan awal' },
+    { id:'p1-materi', icon:'📚', label:'Materi 1', desc:'Sistem & sifat koloid' },
+    { id:'p1-ricosre', icon:'🧪', label:'RICOSRE 1', desc:'Tahapan ilmiah sesi 1' },
+    { id:'p2-materi', icon:'📚', label:'Materi 2', desc:'Pembuatan koloid' },
+    { id:'p2-ricosre', icon:'🧪', label:'RICOSRE 2', desc:'Tahapan ilmiah sesi 2' },
+    { id:'posttest', icon:'🏁', label:'Posttest', desc:'Evaluasi akhir' },
   ];
   document.getElementById('homeCards').innerHTML = items.map(it => {
     const un = isUnlocked(it.id);
@@ -625,14 +607,8 @@ function updateHomeCards() {
   }).join('');
 }
 
-// ═══════════════════════════════════════════
-//  KONFIGURASI GOOGLE SHEETS
-// ═══════════════════════════════════════════
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxevdy9ylFatuWf1IaWihnmK6AR2iRzKvKCVTCX0Wx1vsmFCmySF6O8_7WkhL7eUFHJrw/exec';
 
-// ═══════════════════════════════════════════
-//  HELPER: KIRIM DATA KE GOOGLE SHEETS
-// ═══════════════════════════════════════════
 async function sendToSheets(payload) {
   try {
     await fetch(APPS_SCRIPT_URL, {
@@ -649,9 +625,7 @@ async function sendToSheets(payload) {
 function getTimestamp() {
   return new Date().toLocaleString('id-ID', { timeZone: 'Asia/Makassar' });
 }
-// ═══════════════════════════════════════════
-//  ABSENSI
-// ═══════════════════════════════════════════
+
 async function simpanAbsensi() {
   const name = document.getElementById('siswaName').value.trim();
   const no = document.getElementById('siswaNo').value.trim();
@@ -659,15 +633,11 @@ async function simpanAbsensi() {
   const pertemuan = document.getElementById('siswaPertemuan').value;
   if(!name || !no || !kelas || !pertemuan) { alert('❗ Lengkapi semua data absensi!'); return; }
 
-  // Tampilkan loading
   const btn = document.querySelector('#absensiBtn .btn');
-  const origText = btn.innerHTML;
   btn.innerHTML = '⏳ Menyimpan...';
   btn.disabled = true;
 
   state.siswa = { name, no, kelas, pertemuan };
-
-  // Kirim ke Google Sheets
   await sendToSheets({ type: 'absensi', name, no, kelas, pertemuan, timestamp: getTimestamp() });
 
   document.getElementById('absensiForm').style.display = 'none';
@@ -682,27 +652,31 @@ async function simpanAbsensi() {
 //  QUIZ DATA
 // ═══════════════════════════════════════════
 const PRETEST_Q = [
-  { q:'Koloid adalah campuran yang keadaannya terletak di antara...', opts:['Larutan dan suspensi','Larutan dan emulsi','Suspensi dan emulsi','Emulsi dan sol'], ans:0, exp:'Koloid berada di antara larutan (partikel <1 nm) dan suspensi (partikel >100 nm), dengan ukuran partikel 1–100 nm.' },
-  { q:'Ukuran partikel koloid berkisar antara...', opts:['< 1 nm','1 nm – 100 nm','> 100 nm','1 mm – 1 cm'], ans:1, exp:'Partikel koloid berukuran 1–100 nm, cukup kecil untuk tidak disaring kertas biasa namun cukup besar untuk menghamburkan cahaya.' },
-  { q:'Efek Tyndall adalah...', opts:['Gerak acak partikel koloid','Penghamburan cahaya oleh partikel koloid','Koagulasi koloid','Pergerakan koloid dalam medan listrik'], ans:1, exp:'Efek Tyndall adalah penghamburan cahaya oleh partikel koloid, sehingga berkas cahaya terlihat jelas dalam medium koloid.' },
-  { q:'Susu termasuk jenis koloid...', opts:['Sol','Aerosol','Emulsi','Buih'], ans:2, exp:'Susu adalah emulsi — fase terdispersi berupa lemak (cair) dalam medium pendispersi air (cair).' },
-  { q:'Gerak Brown pada koloid disebabkan oleh...', opts:['Gaya gravitasi','Tumbukan molekul medium','Medan listrik','Penguapan'], ans:1, exp:'Gerak Brown adalah gerakan acak partikel koloid akibat tumbukan dengan molekul-molekul medium pendispersi yang bergerak terus-menerus.' },
+  { q:'Pada awal musim hujan di Samarinda, warga di sekitar Sungai Mahakam sering melihat air sungai berubah menjadi lebih keruh. Air hujan yang mengalir dari permukaan jalan, lahan terbuka, dan bantaran sungai membawa partikel tanah liat, serpihan daun, dan lumpur halus ke dalam aliran sungai. Seorang siswa mengambil sampel air tersebut ke dalam gelas bening dan mendiamkannya selama satu jam. Setelah beberapa waktu, partikel besar mulai turun ke dasar, tetapi air masih tampak keruh merata. Kesimpulan paling tepat adalah...', opts:['semua partikel merupakan larutan sejati','sebagian partikel membentuk sistem koloid','semua partikel akan mengendap sempurna','air menjadi zat murni','partikel berubah menjadi gas'], ans:1, exp:'Air yang tetap keruh merata dan tidak mengendap setelah beberapa lama menunjukkan adanya partikel koloid yang stabil dalam campurannya.' },
+  { q:'Setelah hujan lebat di wilayah Samarinda, siswa mengambil tiga sampel cairan dari lingkungan sekitar. P: tetap jernih, cahaya tidak tampak. Q: tetap keruh merata, cahaya tampak jelas. R: terbentuk endapan, cahaya tampak lemah. Urutan klasifikasi P, Q, dan R yang benar adalah...', opts:['Koloid - larutan - suspensi','larutan - koloid - suspensi','suspensi - larutan - koloid','larutan - suspensi - koloid','koloid - suspensi - larutan'], ans:1, exp:'P (jernih, tanpa Efek Tyndall) adalah larutan. Q (keruh stabil, ada Efek Tyndall) adalah koloid. R (mengendap) adalah suspensi.' },
+  { q:'Di salah satu rumah di pinggir Samarinda, air parit kadang digunakan untuk menyiram tanaman. Seorang siswa mencoba menyaring sampel air keruh menggunakan kertas saring laboratorium. Setelah penyaringan, air tampak sedikit lebih jernih. Namun saat gelas diarahkan ke cahaya dari samping, lintasan cahaya masih tampak jelas. Kesimpulan yang paling tepat adalah...', opts:['seluruh partikel telah tertahan kertas saring','campuran berubah menjadi larutan sejati','campuran masih mengandung partikel koloid yang lolos dari kertas saring','campuran termasuk zat murni','semua partikel telah larut sempurna'], ans:2, exp:'Partikel koloid cukup kecil untuk lolos dari kertas saring biasa, namun cukup besar untuk menimbulkan Efek Tyndall (menghamburkan cahaya).' },
+  { q:'Warga di sekitar Sungai Mahakam sejak lama menggunakan tawas untuk membantu menjernihkan air keruh. Seorang siswa menyatakan bahwa tawas menjernihkan air karena "melarutkan semua kotoran." Guru mengingatkan bahwa partikel koloid dapat stabil karena muatan listrik menyebabkan partikel saling tolak-menolak. Penilaian yang paling tepat terhadap klaim tersebut adalah...', opts:['benar, karena semua partikel berubah menjadi molekul air','benar, karena tawas menambah volume air','kurang tepat, karena tawas hanya mengubah warna partikel','kurang tepat, karena ion dari tawas menurunkan gaya tolak antarkoloid sehingga partikel menggumpal','benar, karena tawas mempercepat penguapan air'], ans:3, exp:'Tawas bekerja sebagai koagulan yang menetralkan muatan listrik pada partikel koloid, sehingga mereka dapat saling bergabung (koagulasi) dan mengendap.' },
+  { q:'Di sebuah sekolah di Samarinda, setelah hujan deras, air tampak keruh kecokelatan karena membawa lumpur halus. Sekolah memiliki dana terbatas dan membutuhkan cara murah tetapi cukup efektif untuk melakukan eksperimen dalam menjernihkan air sehingga dapat digunakan. Metode yang paling tepat untuk digunakan adalah...', opts:['distilasi bertingkat','kristalisasi','pembekuan bertahap','filtrasi vakum bertekanan tinggi','penambahan koagulan, pengendapan, lalu penyaringan'], ans:4, exp:'Koagulasi diikuti dengan proses pengendapan dan penyaringan adalah metode penjernihan air yang paling efektif secara biaya.' },
+  { q:'Pada pagi hari di jalan utama Samarinda, asap kendaraan tampak jelas ketika terkena sinar matahari dari samping. Partikel-partikel asap tidak langsung jatuh ke tanah, melainkan tetap melayang cukup lama di udara. Penyebab utama fenomena tersebut adalah...', opts:['partikel asap larut sempurna di udara','partikel asap memiliki massa nol','udara mengubah partikel menjadi gas murni','partikel mengalami gerak acak terus-menerus akibat tumbukan molekul gas','cahaya matahari memperbesar ukuran partikel'], ans:3, exp:'Gerak Brown—gerakan acak partikel koloid akibat tumbukan terus-menerus dengan molekul medium (gas)—mencegah partikel asap untuk mengendap akibat gravitasi.' },
+  { q:'Di beberapa usaha kecil makanan di Samarinda, pembuatan saus santan dan mayones memerlukan bahan tambahan agar minyak dan air tidak cepat terpisah. Tanpa bahan tersebut, campuran membentuk dua lapisan dalam waktu singkat. Jika bahan ditambahkan, tekstur menjadi lebih lembut dan seragam. Hubungan sebab-akibat yang paling tepat adalah...', opts:['tekstur halus menyebabkan emulgator terbentuk','emulgator meningkatkan suhu campuran','emulgator menstabilkan dispersi sehingga campuran tidak cepat terpisah','emulgator membuat minyak larut sempurna dalam air','tekstur lembut menyebabkan partikel mengendap'], ans:2, exp:'Zat tersebut adalah emulgator, yang berfungsi menurunkan tegangan antarmuka sehingga fase minyak dan air dapat stabil dalam sistem emulsi.' },
+  { q:'Dalam praktikum, siswa menggunakan dua bahan rumah tangga. Zat X: menjaga dua fase tetap tersebar merata. Zat Y: mempercepat terbentuknya gumpalan partikel. Klasifikasi yang tepat adalah...', opts:['X koagulan, Y emulgator','X pelarut, Y adsorben','X emulgator, Y koagulan','X adsorben, Y pelarut','X katalis, Y penetral'], ans:2, exp:'Zat penyetabil fase dispersi (menjaga agar tidak terpisah) disebut emulgator, dan zat pemicu penggumpalan partikel koloid disebut koagulan.' },
+  { q:'Di kawasan industri dekat Samarinda, pengendalian partikel asap menjadi perhatian penting. Beberapa cerobong menggunakan alat pengendap elektrostatis agar partikel halus tidak langsung lepas ke atmosfer. Prinsip kerja alat tersebut adalah...', opts:['partikel dipanaskan hingga hilang','partikel dilarutkan oleh gas panas','partikel dipisahkan dengan kain biasa','partikel bermuatan bergerak menuju elektroda bermuatan berlawanan','partikel dibuat lebih kecil agar tidak terlihat'], ans:3, exp:'Alat Cottrell memanfaatkan sifat elektroforesis koloid, yaitu menggerakkan partikel koloid bermuatan melalui medan listrik bertegangan tinggi.' },
+  { q:'Di permukiman padat di Samarinda, air parit kadang berbau dan berwarna keruh. Salah satu kelompok siswa mengusulkan penggunaan tempurung kelapa yang diolah menjadi karbon aktif. Alasan ilmiah yang paling tepat adalah...', opts:['karbon aktif melarutkan semua zat pencemar','karbon aktif menambah kandungan oksigen dalam air','karbon aktif mempercepat penguapan zat pencemar','karbon aktif mengubah air menjadi zat murni','karbon aktif menyerap molekul pencemar pada permukaannya'], ans:4, exp:'Karbon aktif memiliki luas permukaan yang sangat besar, memungkinkan terjadinya adsorpsi (penyerapan molekul zat pencemar dan bau di permukaannya).' },
 ];
 
 const POSTTEST_Q = [
-  { ctx:'Di muara sungai, partikel tanah liat (koloid bermuatan negatif) mengendap saat bertemu air laut yang mengandung banyak elektrolit.', q:'Proses pembentukan delta sungai ini berkaitan dengan sifat koloid...', opts:['Efek Tyndall','Gerak Brown','Koagulasi','Adsorpsi'], ans:2, exp:'Pembentukan delta sungai adalah contoh Koagulasi. Ion elektrolit dalam air laut menetralkan muatan partikel koloid tanah liat, sehingga partikel bergabung dan mengendap.' },
-  { ctx:'Norit (karbon aktif) digunakan untuk mengatasi keracunan di saluran pencernaan.', q:'Sifat koloid apa yang dimanfaatkan oleh norit?', opts:['Koagulasi','Adsorpsi','Elektroforesis','Efek Tyndall'], ans:1, exp:'Norit memanfaatkan Adsorpsi — karbon aktif menyerap racun dan bakteri pada permukaan partikelnya yang sangat luas.' },
-  { ctx:'Tiga campuran: (A) gula dalam air, (B) susu dalam air, (C) pasir dalam air. Campuran C keruh dengan endapan setelah didiamkan.', q:'Urutan berdasarkan ukuran partikel dari kecil ke besar adalah...', opts:['A, B, C','C, B, A','B, A, C','A, C, B'], ans:0, exp:'Urutan: A (larutan gula, <1 nm) < B (koloid susu, 1-100 nm) < C (suspensi pasir, >100 nm).' },
-  { ctx:'Pabrik menggunakan alat "Cottrel Precipitator" untuk mengurangi polusi udara dari asap.', q:'Sifat koloid yang dimanfaatkan oleh Cottrel Precipitator adalah...', opts:['Efek Tyndall','Gerak Brown','Elektroforesis dan koagulasi','Dialisis'], ans:2, exp:'Cottrel memanfaatkan Elektroforesis — partikel koloid asap bermuatan bergerak ke elektroda, lalu mengalami koagulasi dan mengendap.' },
-  { ctx:'Seorang peneliti ingin membuat es krim yang stabil agar tidak cepat meleleh dan terpisah.', q:'Bahan tambahan apa yang digunakan sebagai koloid pelindung pada es krim?', opts:['Garam','Asam sitrat','Emulsifier (lesitin)','Baking soda'], ans:2, exp:'Emulsifier seperti lesitin berfungsi sebagai koloid pelindung yang menstabilkan emulsi lemak-air dalam es krim.' },
-  { q:'Metode pembuatan koloid dari partikel besar menjadi partikel berukuran koloid disebut...', opts:['Kondensasi','Dispersi','Hidrolisis','Peptisasi termal'], ans:1, exp:'Dispersi adalah pembuatan koloid dengan memecah partikel besar (suspensi) menjadi partikel berukuran koloid, contoh: penggilingan, peptisasi, busur Bredig.' },
-  { q:'Tawas digunakan dalam proses penjernihan air karena sifatnya sebagai...', opts:['Koloid pelindung','Koagulan','Katalis','Emulsifier'], ans:1, exp:'Tawas (Al₂(SO₄)₃) berfungsi sebagai koagulan yang menggumpalkan partikel koloid lumpur sehingga dapat diendapkan dan dipisahkan dari air.' },
-  { ctx:'Dua siswa berdebat: Sita berpendapat darah adalah larutan karena tampak cair dan homogen. Budi berpendapat darah adalah koloid.', q:'Argumen siapa yang lebih tepat?', opts:['Sita, karena darah tampak homogen','Budi, karena darah mengandung protein dan sel berukuran koloid','Keduanya salah, darah adalah suspensi','Keduanya benar'], ans:1, exp:'Budi benar! Darah adalah sistem koloid kompleks — plasma darah mengandung protein (albumin, globulin) berukuran koloid yang terdispersi.' },
+  { q:'Lahan gambut di Kalimantan sering menghasilkan "air gambut" yang berwarna cokelat kehitaman. Secara mikroskopis, air ini merupakan sistem koloid kompleks dimana makromolekul asam humat terdispersi dalam air. Asam humat ini memiliki gugus fungsi bermuatan negatif dan bersifat liofil (menyukai medium air), sehingga sangat stabil dan tidak mengendap berbulan-bulan. Berdasarkan analisis, manakah pernyataan yang menjelaskan penyebab stabilitas air tersebut?', opts:['Massa jenis asam humat lebih ringan dari air sehingga selalu mengapung di permukaan','Adanya lapisan molekul air yang membungkus partikel dan gaya tolak-menolak antar muatan negatif mencegah terjadinya koagulasi.','Gerak Brown pada air gambut berhenti saat mencapai titik jenuh sehingga partikel membeku','Sinar ultraviolet di lahan gambut mengubah fase cair asam humat menjadi gas','Asam humat adalah koloid liofob yang tidak memiliki interaksi dengan molekul air'], ans:1, exp:'Kombinasi antara lapisan pelindung molekul air (liofil) dan gaya tolak-menolak elektrostatik (muatan negatif) menjaga stabilitas partikel koloid asam humat.' },
+  { q:'Seorang siswa membandingkan tiga sampel air. A: tetap jernih, lintasan cahaya tidak tampak. B: tetap agak keruh, lintasan cahaya tampak jelas. C: terbentuk endapan, lintasan cahaya agak tampak. Berdasarkan data pengamatan, klasifikasi yang paling tepat untuk sampel A, B, dan C adalah...', opts:['Larutan - koloid - suspensi','Koloid - larutan - suspensi','Larutan - suspensi - koloid','Suspensi - koloid - larutan','Koloid - suspensi - larutan'], ans:0, exp:'A (tidak ada Efek Tyndall) adalah larutan sejati. B (stabil, ada Efek Tyndall) adalah koloid. C (terjadi endapan) adalah suspensi kasar.' },
+  { q:'Dalam uji laboratorium, sampel air gambut disinari laser dan teramati adanya jalur cahaya jelas (berpendar). Namun saat dilewatkan pada membran semipermeabel (ultrafiltrasi), air keluar jernih dan zat warna tertahan. Bukti ini menunjukkan bahwa air gambut adalah...', opts:['Larutan sejati karena dapat melewati membran semipermeabel.','Suspensi kasar karena partikelnya dapat dilihat dengan mata telanjang.','Sistem koloid karena menunjukkan Efek Tyndall dan partikelnya berukuran antara larutan dan suspensi.','Senyawa murni yang tidak dapat dipisahkan secara fisik.','Campuran heterogen yang partikelnya mudah mengendap karena gaya gravitasi.'], ans:2, exp:'Kemampuan menghamburkan cahaya dan tertahan oleh membran semipermeabel merupakan sifat khas dari sistem koloid.' },
+  { q:'Seorang mahasiswa menyatakan bahwa menambahkan larutan kapur (Ca(OH)₂) akan jauh lebih efisien untuk menjernihkan air gambut dibandingkan garam dapur (NaCl) pada konsentrasi yang sama. Berdasarkan teori muatan listrik koloid, pernyataan yang benar terkait argumen mahasiswa tersebut adalah...', opts:['Salah, karena karena garam dapur memiliki jumlah ion yang lebih banyak','Benar, karena daya koagulasi ion berbanding lurus dengan pangkat muatannya sehingga ion kalsium lebih kuat menarik partikel bermuatan negatif.','Salah, karena kapur hanya berfungsi meningkatkan pH tanpa mempengaruhi stabilitas koloid.','Benar, karena kapur bertindak sebagai koloid pelindung yang membungkus asam humat.','Salah, karena asam humat bermuatan positif sehingga memerlukan ion negatif'], ans:1, exp:'Ion Ca²⁺ memiliki muatan yang lebih besar dari Na⁺, sehingga berdasarkan hukum Hardy-Schulze, gaya tarik dan daya koagulasinya terhadap koloid negatif akan lebih kuat.' },
+  { q:'Jika Anda adalah kepala teknis PDAM yang harus mengolah air sungai gambut yang sangat keruh secara massal dan ekonomis, langkah manakah yang paling solutif?', opts:['Mendiamkan air di kolam penampungan selama setahun agar terjadi pengendapan alami.','Melakukan distilasi (penyulingan) pada seluruh volume air sungai untuk mendapatkan air murni.','Melakukan proses koagulasi-flokulasi dengan menambahkan tawas/kapur, diikuti pengendapan dan filtrasi pasir cepat.','Menambahkan sabun dalam jumlah besar agar kotoran terikat oleh buih.','Menggunakan membran dialisis skala raksasa untuk menyaring setiap molekul air.'], ans:2, exp:'Koagulasi-flokulasi menggunakan bahan kimia seperti tawas atau kapur merupakan metode yang efektif dan masuk akal secara biaya untuk pengolahan air bersih skala besar.' },
+  { q:'Kebakaran hutan menghasilkan asap pekat (koloid aerosol padat) yang memiliki muatan listrik searah yang mencegahnya bergabung menjadi butiran besar. Di sisi lain, lateks (getah karet cair) adalah sol bermuatan negatif yang harus dirusak stabilitasnya dengan menambahkan asam agar menggumpal. Mengapa asap sisa kebakaran hutan sangat sulit hilang meskipun angin bertiup kencang, dan cenderung menempel pada pakaian?', opts:['Karena partikel asap mengalami gerak Brown yang konstan dan memiliki kemampuan adsorpsi untuk menempel pada permukaan lain.','Karena asap adalah gas murni yang tidak memiliki massa sehingga tidak terpengaruh gravitasi.','Karena partikel asap mengalami dialisis spontan saat bersentuhan dengan udara bebas.','Karena asap merupakan emulsi cair yang mudah menguap dan menyublim kembali.','Karena asap tidak memiliki muatan listrik sehingga tidak ada gaya tarik-menarik.'], ans:0, exp:'Gerak Brown menyebabkan asap tetap melayang (menolak pengaruh gravitasi), dan sifat adsorpsi menyebabkan asap sangat mudah menempel pada serat kain atau permukaan benda.' },
+  { q:'Seorang petani karet menyiapkan 3 mangkuk lateks dan menambahkan Asam Format, Asam Cuka, atau Air Jeruk Nipis, lalu mencatat kekerasan tekstur karet setelah 2 jam. Variabel bebas dan variabel terikat pada percobaan tersebut adalah...', opts:['Tekstur karet dan Volume lateks.','Jenis asam dan Kekerasan/tekstur gumpalan karet.','Waktu pembekuan dan Konsentrasi asam.','Massa jenis karet dan Jenis mangkuk.','Volume asam dan Jenis lateks.'], ans:1, exp:'Variabel yang dimanipulasi (bebas) adalah jenis asam, dan respons yang diamati (terikat) adalah kekerasan/tekstur gumpalan karet.' },
+  { q:'Dalam pembuatan margarin dari minyak sawit, diperlukan zat lesitin agar minyak dan air tidak terpisah. Lesitin berfungsi menurunkan tegangan antarmuka sehingga air dapat tersebar dalam minyak. Berdasarkan bukti tersebut, lesitin diklasifikasikan sebagai...', opts:['Koagulan (penggumpal)','Emulgator (penstabil emulsi)','Adsorben (penyerap muatan)','Dialisator (penyaring ion)','Peptisator (pemecah gumpalan)'], ans:1, exp:'Zat yang ditambahkan ke dalam campuran cairan yang aslinya tidak saling campur (seperti air dan minyak) agar stabil disebut emulgator.' },
+  { q:'"Pengendap Cottrell yang dipasang di cerobong pabrik karet di Kalimantan dapat mengurangi polusi udara karena menggunakan prinsip elektroforesis untuk menarik partikel asap bermuatan ke elektroda." Pernyataan yang benar terkait argumen di atas adalah...', opts:['Salah, karena Cottrell menggunakan prinsip dialisis untuk menyaring gas.','Benar, karena partikel koloid asap bermuatan listrik sehingga akan bergerak dan mengendap saat ditarik oleh medan listrik tegangan tinggi.','Salah, karena asap pabrik tidak bermuatan sehingga tidak akan tertarik.','Benar, karena listrik akan membakar asap menjadi oksigen murni yang bermanfaat.','Salah, karena elektroforesis hanya bisa terjadi pada koloid tipe cair (sol).'], ans:1, exp:'Alat Cottrell memanfaatkan sifat elektroforesis, dimana partikel asap koloid yang bermuatan akan mengalir mengikuti kutub medan listrik dan mengalami koagulasi pada plat.' },
+  { q:'Jika terjadi tumpahan minyak mentah di sungai yang membentuk koloid dan sulit dibersihkan, keputusan apa yang paling tepat berdasarkan sifat adsorpsi koloid?', opts:['Menyiram tumpahan dengan air sabun agar minyak larut dan hilang ke dasar sungai.','Menaburkan serbuk karbon aktif atau kulit pisang yang telah diolah (bio-adsorben) untuk menyerap molekul minyak di permukaannya sehingga mudah diangkat.','Membiarkan matahari menguapkan seluruh minyak hingga sungai kembali bersih.','Menambahkan zat asam agar minyak menggumpal dan tenggelam merusak dasar sungai.','Menyaring air sungai menggunakan saringan pasir dari pinggir sungai'], ans:1, exp:'Bahan bio-adsorben atau karbon aktif dapat secara luas menyerap (mengadsorpsi) molekul minyak pada permukaannya, sehingga minyak lebih mudah untuk ditangani dan diangkat dari air.' },
 ];
 
-// ═══════════════════════════════════════════
-//  QUIZ ENGINE
-// ═══════════════════════════════════════════
 function renderQuiz(type) {
   const data = type === 'pretest' ? PRETEST_Q : POSTTEST_Q;
   const containerId = type === 'pretest' ? 'pretestContainer' : 'posttestContainer';
@@ -714,6 +688,7 @@ function renderQuiz(type) {
       const pct = Math.round(score/data.length*100);
       const emoji = pct>=80?'🏆':pct>=60?'🎉':pct>=40?'📚':'💪';
       const msg = pct>=80?'Luar biasa! Pemahaman koloidmu sangat baik!':pct>=60?'Bagus! Terus tingkatkan pemahamanmu.':pct>=40?'Cukup baik. Review materi yang belum dipahami.':'Jangan menyerah! Pelajari kembali materinya.';
+      
       c.innerHTML = `<div class="quiz-result">
         <div class="result-emoji">${emoji}</div>
         <div class="result-title">${type==='pretest'?'Pretest':'Posttest'} Selesai!</div>
@@ -721,22 +696,9 @@ function renderQuiz(type) {
         <div class="result-pct">${pct}% Benar · ${msg}</div>
         <div class="btn-row" style="justify-content:center; margin-top:1rem;">
           ${type==='pretest' ? `<button class="btn btn-primary" onclick="afterPretest(${score})">Lanjut ke Materi →</button>` :
-            `<button class="btn btn-primary" onclick="goPage('profil')">Lihat Profil & Rekap →</button>`}
+            `<button class="btn btn-primary" onclick="afterPosttest(${score})">Lihat Profil & Rekap →</button>`}
         </div>
       </div>`;
-      if(type==='posttest') {
-        state.posttestDone=true; state.posttestScore=score; buildNav();
-        if(state.siswa) {
-          const s = state.siswa;
-          sendToSheets({
-            type: 'posttest',
-            name: s.name, no: s.no, kelas: s.kelas,
-            skor: score, total: data.length, persen: pct,
-            skorPretest: state.pretestScore, persen_pretest: Math.round(state.pretestScore/PRETEST_Q.length*100),
-            timestamp: getTimestamp()
-          });
-        }
-      }
       return;
     }
     const q = data[cur];
@@ -749,8 +711,8 @@ function renderQuiz(type) {
       ${q.ctx ? `<div class="quiz-context">📰 ${q.ctx}</div>` : ''}
       <div class="quiz-question">${q.q}</div>
       <div class="quiz-options">
-        ${q.opts.map((o,i)=>`<button class="quiz-opt" id="qo${i}" onclick="selectQ(${i},${q.ans},'${containerId}','${q.exp}')">
-          <span class="opt-letter">${'ABCD'[i]}</span>${o}
+        ${q.opts.map((o,i)=>`<button class="quiz-opt" id="qo${i}" onclick="selectQ(${i},${q.ans},'${containerId}','${q.exp.replace(/'/g,"\\'")}')">
+          <span class="opt-letter">${'ABCD'[i] || 'E'}</span>${o}
         </button>`).join('')}
       </div>
       <div class="quiz-feedback" id="qfb"></div>
@@ -759,18 +721,22 @@ function renderQuiz(type) {
         <button class="btn btn-primary btn-sm" id="qnext" style="display:none;" onclick="nextQ()">Berikutnya →</button>
       </div>`;
 
-    function selectQ(i, ans, cid, exp) {
+    window.selectQ = function(i, ans, cid, exp) {
       if(answered) return; answered=true;
       const opts = document.querySelectorAll('.quiz-opt');
+      
+      // Simpan HANYA huruf jawabannya saja (A/B/C/D/E)
+      const choosenLetter = 'ABCDE'[i] || 'E';
+      if (type === 'pretest') state.pretestAnswers[cur] = choosenLetter;
+      else state.posttestAnswers[cur] = choosenLetter;
+
       opts.forEach(o=>o.disabled=true);
       const fb = document.getElementById('qfb');
       if(i===ans) { opts[i].classList.add('correct'); score++; fb.className='quiz-feedback ok show'; fb.innerHTML=`✅ ${exp}`; }
       else { opts[i].classList.add('wrong'); opts[ans].classList.add('correct'); fb.className='quiz-feedback bad show'; fb.innerHTML=`❌ ${exp}`; }
       document.getElementById('qnext').style.display='block';
     }
-    function nextQ() { cur++; answered=false; render(); }
-    window.selectQ = selectQ;
-    window.nextQ = nextQ;
+    window.nextQ = function() { cur++; answered=false; render(); }
   }
   render();
 }
@@ -781,14 +747,42 @@ async function afterPretest(score) {
   if(state.siswa) {
     const s = state.siswa;
     const pct = Math.round(score / PRETEST_Q.length * 100);
+    
+    // Gabungkan array huruf menjadi string "No 1 A, No 2 B, No 3 C, ..."
+    const formatJawaban = state.pretestAnswers.map((ans, idx) => `No ${idx + 1} ${ans}`).join(', ');
+
     await sendToSheets({
       type: 'pretest',
       name: s.name, no: s.no, kelas: s.kelas,
       skor: score, total: PRETEST_Q.length, persen: pct,
+      jawaban_detail: formatJawaban, 
       timestamp: getTimestamp()
     });
   }
   goPage('p1-materi');
+}
+
+async function afterPosttest(score) {
+  state.posttestDone = true; state.posttestScore = score;
+  buildNav(); updateHomeCards();
+  
+  if(state.siswa) {
+    const s = state.siswa;
+    const pct = Math.round(score / POSTTEST_Q.length * 100);
+    
+    // Gabungkan array huruf menjadi string "No 1 A, No 2 B, No 3 C, ..."
+    const formatJawaban = state.posttestAnswers.map((ans, idx) => `No ${idx + 1} ${ans}`).join(', ');
+
+    await sendToSheets({
+      type: 'posttest',
+      name: s.name, no: s.no, kelas: s.kelas,
+      skor: score, total: POSTTEST_Q.length, persen: pct,
+      skorPretest: state.pretestScore, persen_pretest: Math.round(state.pretestScore/PRETEST_Q.length*100),
+      jawaban_detail: formatJawaban, 
+      timestamp: getTimestamp()
+    });
+  }
+  goPage('profil');
 }
 
 // ═══════════════════════════════════════════
@@ -801,84 +795,81 @@ const RICOSRE_ICONS = ['📖','🔍','🧠','⚗️','🔄','🌍'];
 const P1_RICO_CONTENT = [
   {
     title:'Reading — Membaca Wacana',
-    context:`Di Kota Samarinda, Sungai Mahakam menjadi sumber air, jalur transportasi, dan pusat aktivitas ekonomi. Pada musim hujan, air sungai sering tampak lebih keruh dan berwarna kecokelatan. Kondisi ini disebabkan oleh partikel halus berupa lumpur, tanah, bahan organik, dan material erosi dari daerah hulu yang terbawa aliran permukaan. Sebagian partikel dapat mengendap, tetapi sebagian lainnya tetap tersebar lama di dalam air. Dalam sains, keadaan ini dapat dijelaskan melalui konsep sistem dispersi. Ukuran partikel menentukan apakah campuran tergolong larutan, koloid, atau suspensi. Literasi sains menuntut siswa bukan hanya mengenali istilah tersebut, tetapi juga menggunakan informasi ilmiah untuk menjelaskan mengapa air sungai dapat tetap keruh meskipun sudah didiamkan dalam waktu tertentu.`,
-    task:'Tuliskan tiga (3) informasi ilmiah penting dari wacana di atas.',
-    hint:'Petunjuk: Identifikasi fakta sains tentang partikel, sistem dispersi, dan fenomena air keruh.'
+    context:`<b>Misteri Warna Cokelat Sang Mahakam</b><br><br>Sungai Mahakam, nadi kehidupan Kalimantan Timur yang membelah Kota Samarinda, seringkali memicu pertanyaan bagi mata yang melihatnya: Mengapa airnya selalu berwarna cokelat pekat? Bagi sebagian orang, ini dianggap sekadar lumpur biasa. Namun, dari kacamata kimia lingkungan, fenomena ini adalah sebuah demonstrasi skala besar dari sistem koloid.<br><br>Air Sungai Mahakam mengandung konsentrasi Padatan Tersuspensi Total (TSS) yang sangat tinggi. Partikel-partikel ini bukan sekadar pasir kasar yang bisa tenggelam dengan cepat ke dasar sungai. Sebaliknya, sebagian besar terdiri dari partikel tanah liat (lempung), sisa humus hutan dari hulu, dan mineral silika berukuran mikroskopis (sekitar 1 hingga 100 nanometer). Karena ukurannya yang berada dalam rentang koloid, partikel-partikel ini mengalami Gerak Brown—getaran konstan akibat tumbukan molekul air—yang melawan gaya gravitasi, sehingga mereka tetap "melayang" dan tidak pernah mengendap secara alami meski arus sungai tenang.<br><br>Selain itu, stabilitas warna cokelat ini disebabkan oleh fenomena muatan listrik. Partikel koloid tanah di Mahakam cenderung bermuatan negatif. Karena memiliki muatan yang sama, partikel-partikel ini saling tolak-menolak (electrostatic repulsion) ketika berdekatan, mencegah mereka untuk bergabung menjadi gumpalan yang lebih besar. Akibatnya, air tetap keruh secara permanen.<br><br>Secara optik, partikel ini menunjukkan Efek Tyndall yang masif. Cahaya matahari yang jatuh ke permukaan sungai tidak diteruskan melainkan dihamburkan ke segala arah, memberikan penampakan visual yang tidak tembus pandang. Inilah yang menyebabkan kedalaman sungai sulit diprediksi hanya dengan pandangan mata telanjang. Fenomena ini bukan sekadar masalah estetika, melainkan tantangan teknis bagi warga Samarinda yang bergantung pada sungai ini sebagai sumber air baku.`,
+    task:'Tuliskan tiga (3) informasi ilmiah penting dari wacana tentang Sungai Mahakam di atas.',
+    hint:'Petunjuk: Identifikasi fakta sains tentang ukuran partikel, gerak partikel, dan muatan listrik.'
   },
   {
     title:'Identifying the Problem — Merumuskan Masalah',
-    context:`Masyarakat sering beranggapan bahwa semua air keruh akan jernih jika didiamkan. Namun pengamatan menunjukkan bahwa pada beberapa kondisi air tetap keruh cukup lama. Hal ini menunjukkan adanya persoalan ilmiah yang perlu diidentifikasi berdasarkan bukti, bukan hanya berdasarkan kebiasaan atau dugaan.`,
+    context:`Masyarakat sering beranggapan bahwa semua air keruh akan jernih jika didiamkan. Namun pengamatan dan pembacaan wacana menunjukkan bahwa air Mahakam tetap keruh sangat lama secara permanen. Hal ini menunjukkan adanya persoalan ilmiah yang perlu diidentifikasi.`,
     task:'Rumuskan masalah ilmiah utama dari fenomena tersebut dalam bentuk pertanyaan ilmiah.',
     hint:'Petunjuk: Gunakan kata tanya "Mengapa...", "Bagaimana...", atau "Apa yang menyebabkan..."'
   },
   {
     title:'Constructing the Solution — Menyusun Hipotesis',
-    context:`Untuk menjelaskan fenomena air keruh, siswa perlu membandingkan ciri-ciri larutan, koloid, dan suspensi. Larutan sangat stabil dan tidak menghamburkan cahaya. Suspensi mudah mengendap. Koloid berada di antara keduanya dan mampu menghamburkan cahaya karena ukuran partikelnya.`,
-    task:'Susun hipotesis tentang jenis sistem dispersi pada air Sungai Mahakam saat keruh. Sertakan alasan ilmiahmu!',
-    hint:'Petunjuk: Pertimbangkan ukuran partikel, kestabilan, dan sifat-sifat sistem dispersi.'
+    context:`Untuk menjelaskan fenomena stabilitas air keruh tersebut, siswa perlu membandingkan konsep ukuran partikel, sifat Gerak Brown, dan interaksi muatan elektrostatik antar partikel di dalam sungai.`,
+    task:'Susun hipotesis tentang jenis sistem dispersi pada air Sungai Mahakam dan apa yang menahan warnanya tetap cokelat. Sertakan alasan ilmiahmu!',
+    hint:'Petunjuk: Hubungkan ukuran partikel (koloid), tolak-menolak muatan listrik, dan gaya gravitasi.'
   },
   {
     title:'Solving the Problem — Memecahkan Masalah',
-    context:`Berdasarkan teori sistem dispersi: larutan (partikel <1 nm), koloid (1–100 nm), dan suspensi (>100 nm). Air sungai yang keruh mengandung campuran berbagai jenis partikel dari berbagai ukuran. Partikel besar (kerikil, pasir) cepat mengendap. Partikel berukuran koloid tetap tersebar.`,
-    task:'Jelaskan mengapa air Sungai Mahakam tetap keruh lama meskipun didiamkan! Gunakan konsep koloid dan sistem dispersi.',
-    hint:'Petunjuk: Hubungkan dengan sifat Gerak Brown dan ukuran partikel koloid.'
+    context:`Berdasarkan teori koloid: larutan (<1 nm), koloid (1–100 nm), suspensi (>100 nm). Partikel berukuran koloid memiliki sifat optik dan kinetik yang khusus sehingga air Mahakam memiliki karakteristik keruh yang khas secara visual.`,
+    task:'Jelaskan secara runtut mengapa air Sungai Mahakam tidak bisa jernih dengan sendirinya, dan mengapa kita sulit memprediksi kedalaman sungai tersebut dari permukaan! Gunakan konsep Gerak Brown dan Efek Tyndall.',
+    hint:'Petunjuk: Bahas tumbukan molekuler (kinetik) dan penghamburan cahaya (optik).'
   },
   {
     title:'Reviewing the Problem — Meninjau Ulang',
-    context:`Dalam literasi sains, jawaban harus dapat ditelusuri kembali ke data dan bukti. Kesimpulan perlu diperiksa ulang agar benar-benar konsisten dengan informasi yang tersedia.`,
-    task:'Tinjau kembali hipotesis dan penjelasanmu. Apakah sudah berbasis bukti ilmiah? Apa yang perlu diperbaiki atau ditambahkan?',
-    hint:'Petunjuk: Cek apakah penjelasanmu sudah menggunakan istilah ilmiah yang tepat dan didukung fakta.'
+    context:`Dalam literasi sains, jawaban harus konsisten dengan fenomena dan konsep teoritis. Penjelasan mengenai gaya elektrostatik juga sangat krusial dalam menahan agregasi partikel.`,
+    task:'Tinjau kembali hipotesis dan penjelasanmu pada tahap sebelumnya. Apakah sudah memasukkan argumen tentang gaya tolak-menolak elektrostatik? Jika ada kekurangan, perbaiki di sini.',
+    hint:'Petunjuk: Periksa kembali penggunaan istilah "electrostatic repulsion" dan kesesuaiannya dengan teori koloid.'
   },
   {
     title:'Extending the Problem — Memperluas Masalah',
-    context:`Konsep koloid tidak hanya berlaku pada air sungai. Fenomena serupa dapat ditemukan pada santan, kabut pagi di tepian sungai, atau lumpur pascatambang di Kalimantan Timur.`,
-    task:'Hubungkan konsep koloid dengan satu fenomena lokal lain di sekitarmu! Jelaskan mengapa fenomena tersebut berkaitan dengan sistem koloid.',
-    hint:'Petunjuk: Pikirkan fenomena alam atau produk sehari-hari yang kamu temui di lingkunganmu.'
+    context:`Kondisi air seperti di Sungai Mahakam tidak hanya terjadi di sana. Di wilayah bergambut di Kalimantan, air juga seringkali berwarna gelap secara persisten akibat interaksi koloidal senyawa organik kompleks.`,
+    task:'Hubungkan konsep kestabilan partikel koloid Mahakam dengan satu fenomena di sekitarmu (misalnya susu yang tidak mengendap atau kabut asap/karhutla). Berikan penjelasan komparatif singkat!',
+    hint:'Petunjuk: Pilih satu contoh koloid lain dan jelaskan kesamaan prinsipnya dalam mempertahankan fase dispersi agar tidak terpisah.'
   }
 ];
 
 const P2_RICO_CONTENT = [
   {
     title:'Reading — Membaca Wacana',
-    context:`Air bersih merupakan kebutuhan mendasar masyarakat. Di banyak daerah, air dari sungai atau sumur masih berwarna keruh dan mengandung banyak partikel tersuspensi maupun koloid. Proses penjernihan air menggunakan prinsip kimia koloid — salah satunya adalah koagulasi. Tawas (Al₂(SO₄)₃) dilarutkan dalam air keruh sehingga menghasilkan Al(OH)₃ yang bersifat koloid. Koloid ini kemudian menarik partikel-partikel kecil bermuatan negatif (lumpur, bakteri) melalui adsorpsi dan menyebabkan koagulasi sehingga partikel mengendap. Proses ini disebut koagulasi dan flokulasi.`,
-    task:'Tuliskan tiga (3) informasi ilmiah penting dari wacana tentang penjernihan air di atas.',
-    hint:'Petunjuk: Fokus pada proses kimia, bahan yang digunakan, dan prinsip koloid yang terlibat.'
+    context:`<b>Rahasia Tawas dalam Penjernihan Air di Kota Tepian</b><br><br>Air Sungai Mahakam merupakan sistem koloid yang sangat stabil. Stabilitas ini disebabkan oleh partikel lumpur mikroskopis yang memiliki muatan listrik sejenis (negatif), sehingga mereka selalu saling tolak-menolak dan enggan mengendap. Untuk mengatasi hal ini, masyarakat dan PDAM Samarinda menggunakan Tawas Al₂(SO₄)₃ sebagai agen penjernih utama.<br><br>Proses penjernihan diawali dengan mekanisme Koagulasi. Saat tawas dilarutkan ke dalam air sungai, ia melepaskan kation multivalen Al³⁺. Ion positif ini bertindak sebagai penetral; mereka akan mengadsorpsi atau menempel pada permukaan partikel lumpur yang bermuatan negatif. Ketika muatan listrik partikel telah netral, gaya tolak-menolak antar partikel hilang, memungkinkan mereka untuk saling bertumbukan dan berikatan.<br><br>Langkah selanjutnya adalah Flokulasi. Partikel-partikel yang telah netral tadi mulai bergabung membentuk gumpalan yang lebih besar dan kasar yang disebut flok. Seiring dengan bertambahnya ukuran flok, massa jenisnya menjadi lebih besar daripada air, sehingga gaya gravitasi mampu menarik gumpalan tersebut jatuh ke dasar wadah (sedimentasi).<br><br>Namun, penggunaan tawas di wilayah Samarinda memerlukan ketelitian dosis. Secara kimiawi, pelarutan tawas melepaskan ion hidrogen (H⁺) yang dapat meningkatkan keasaman air (menurunkan pH). Jika dosis yang diberikan berlebihan, tidak hanya air yang menjadi asam, tetapi dapat terjadi fenomena re-stabilisasi. Dalam kondisi ini, partikel lumpur justru akan bermuatan positif kembali karena tertutup lapisan ion Al³⁺ yang berlebih, menyebabkan partikel kembali tolak-menolak dan air tetap keruh. Oleh karena itu, penentuan dosis optimal melalui uji laboratorium sangat penting untuk mendapatkan air bersih yang aman bagi warga Kota Samarinda.`,
+    task:'Tuliskan tiga (3) informasi ilmiah penting dari wacana tentang proses penjernihan air (penggunaan tawas) di atas.',
+    hint:'Petunjuk: Fokus pada ion yang dilepaskan, tahapan koagulasi-flokulasi, dan masalah dosis berlebih.'
   },
   {
     title:'Identifying the Problem — Merumuskan Masalah',
-    context:`Tidak semua air keruh dapat dijernihkan dengan metode yang sama. Berbagai faktor mempengaruhi efektivitas penjernihan, seperti jenis partikel pengotor, pH air, dan konsentrasi koagulan. Dalam situasi lapangan, penentuan dosis tawas yang tepat sangat penting.`,
-    task:'Rumuskan masalah ilmiah terkait penggunaan tawas untuk penjernihan air dalam bentuk pertanyaan ilmiah.',
-    hint:'Petunjuk: Pertimbangkan variabel yang mempengaruhi efektivitas penjernihan air.'
+    context:`Penambahan tawas dalam air keruh tidak selamanya langsung membuahkan hasil jernih yang baik. Seperti yang disebutkan dalam wacana, ada batasan dosis agar fenomena "re-stabilisasi" tidak terjadi.`,
+    task:'Rumuskan masalah ilmiah terkait dosis tawas dan tingkat keasaman (pH) air dalam bentuk pertanyaan.',
+    hint:'Petunjuk: Pertimbangkan hubungan antara konsentrasi bahan kimia dengan stabilitas koloid serta kualitas pH akhir.'
   },
   {
     title:'Constructing the Solution — Menyusun Hipotesis',
-    context:`Koagulasi terjadi ketika muatan partikel koloid dinetralkan sehingga partikel-partikel saling bergabung dan mengendap. Tawas menghasilkan ion Al³⁺ yang dapat menetralkan muatan negatif partikel lumpur. Dengan konsentrasi tawas yang tepat, proses ini akan berjalan optimal.`,
-    task:'Susun hipotesis tentang hubungan antara konsentrasi tawas dan kejernihan air. Sertakan alasan ilmiahmu!',
-    hint:'Petunjuk: Pikirkan apa yang terjadi jika tawas terlalu sedikit atau terlalu banyak.'
+    context:`Koagulasi terjadi optimal ketika muatan partikel koloid tepat dinetralkan (isoelectric point). Jika ion Al³⁺ dari tawas terlalu sedikit, koagulasi tidak terjadi. Jika terlalu banyak, partikel akan diselimuti muatan positif dan kembali tolak-menolak.`,
+    task:'Susun hipotesis tentang bagaimana perbedaan dosis tawas (kurang, pas, berlebih) akan memengaruhi kekeruhan akhir dan pH air. Sertakan alasan ilmiahmu!',
+    hint:'Petunjuk: Kaitkan hipotesismu dengan prinsip adsorpsi muatan berlawanan dan pelepasan ion H⁺.'
   },
   {
     title:'Solving the Problem — Memecahkan Masalah',
-    context:`Data hasil percobaan: (1) Tanpa tawas: air tetap keruh; (2) Tawas 1 g/L: sedikit lebih jernih; (3) Tawas 5 g/L: cukup jernih; (4) Tawas 10 g/L: sangat jernih, endapan banyak; (5) Tawas 20 g/L: air lebih jernih tapi sedikit berbau dan pH turun drastis.`,
-    task:'Analisis data percobaan tersebut! Tentukan konsentrasi tawas optimal dan jelaskan alasanmu menggunakan prinsip koloid.',
-    hint:'Petunjuk: Pertimbangkan efek koagulasi, pH, dan praktisnya penggunaan di lapangan.'
+    context:`Di lab PDAM, teknisi mencatat: Tabung A (tawas 10mg/L) = air lambat jernih, pH 7.1. Tabung B (tawas 30mg/L) = air sangat jernih, flok besar, pH 6.8. Tabung C (tawas 80mg/L) = air kembali agak keruh (tidak membentuk flok besar), pH turun drastis ke 5.5.`,
+    task:'Analisis data tersebut berdasarkan prinsip koagulasi dan flokulasi. Jelaskan mengapa Tabung C justru tidak se-jernih Tabung B meskipun diberi tawas paling banyak!',
+    hint:'Petunjuk: Jelaskan fenomena re-stabilisasi muatan koloid yang terjadi pada Tabung C.'
   },
   {
     title:'Reviewing the Problem — Meninjau Ulang',
-    context:`Evaluasi hasil penjernihan air tidak hanya dilihat dari kejernihan visual, tetapi juga pH, kadar logam sisa, dan keamanan untuk dikonsumsi. Standar air bersih WHO mensyaratkan pH 6.5–8.5 dan turbiditas <1 NTU.`,
-    task:'Evaluasi hipotesismu tentang konsentrasi tawas optimal! Apakah jawabanmu mempertimbangkan semua aspek (kejernihan, pH, keamanan)? Apa yang perlu diperbaiki?',
-    hint:'Petunjuk: Bandingkan hipotesismu dengan data percobaan dan standar kualitas air.'
+    context:`Menjernihkan air tidak cukup hanya secara visual, tetapi parameter keamanan air (seperti pH) juga harus dipertimbangkan. Standar air bersih memiliki rentang pH 6.5–8.5.`,
+    task:'Tinjau kembali analisis dan jawabanmu sebelumnya. Apakah penjernihan air yang sukses hanya dilihat dari hilangnya kekeruhan? Apa risikonya jika PDAM sembarangan memperbanyak dosis tawas?',
+    hint:'Petunjuk: Periksa aspek keseimbangan antara efektivitas flokulasi kimia dengan kualitas pH air konsumsi.'
   },
   {
     title:'Extending the Problem — Memperluas Masalah',
-    context:`Selain tawas, ada berbagai metode penjernihan air lain yang memanfaatkan prinsip koloid: penggunaan PAC (Poly Aluminium Chloride), koagulan alami (biji kelor), elektrokoagulasi, dan membran ultrafiltrasi (memanfaatkan ukuran partikel koloid).`,
-    task:'Hubungkan konsep koloid dengan teknologi penjernihan air modern! Jelaskan satu metode alternatif dan prinsip koloid yang digunakan.',
-    hint:'Petunjuk: Pilih salah satu teknologi dan jelaskan kaitannya dengan sifat-sifat koloid yang telah kamu pelajari.'
+    context:`Prinsip netralisasi muatan koloid juga banyak digunakan pada industri lain atau pengelolaan limbah cair pabrik agar partikel limbah berat dapat terkoagulasi dan disaring sebelum dibuang.`,
+    task:'Hubungkan prinsip Koagulasi-Flokulasi pada PDAM ini dengan satu penerapan lain yang bermanfaat. Misalnya pada pengolahan limbah atau pengendapan getah karet (lateks).',
+    hint:'Petunjuk: Jelaskan secara singkat konsep netralisasi koloid yang diterapkan pada contoh baru tersebut.'
   }
 ];
 
-// ═══════════════════════════════════════════
-//  RICOSRE RENDERER
-// ═══════════════════════════════════════════
 function renderRicosre(session) {
   const data = session===1 ? P1_RICO_CONTENT : P2_RICO_CONTENT;
   const answers = session===1 ? state.p1RicoAnswers : state.p2RicoAnswers;
@@ -887,7 +878,6 @@ function renderRicosre(session) {
   const contentId = `p${session}-step-content`;
   const navId = `p${session}StepNav`;
 
-  // Build step dots
   document.getElementById(indicatorId).innerHTML = data.map((_,i) => {
     let cls = 'step-dot';
     if(i < curStep) cls += ' done';
@@ -896,7 +886,6 @@ function renderRicosre(session) {
   }).join('');
 
   if(curStep >= 6) {
-    // All done
     document.getElementById(contentId).innerHTML = `
       <div class="card" style="text-align:center; padding:2.5rem;">
         <div style="font-size:3rem; margin-bottom:1rem;">🎉</div>
@@ -913,7 +902,6 @@ function renderRicosre(session) {
 
   const step = data[curStep];
   const savedAns = answers[curStep] || '';
-  const isDone = curStep < (session===1 ? state.p1RicosreStep : state.p2RicosreStep);
 
   document.getElementById(contentId).innerHTML = `
     <div class="card">
@@ -930,7 +918,6 @@ function renderRicosre(session) {
       <textarea class="answer-box ${savedAns?'saved':''}" id="ricoAnswer${session}_${curStep}" placeholder="Tuliskan jawabanmu di sini..." rows="5">${savedAns}</textarea>
     </div>`;
 
-  // NAV
   const isFirst = curStep === 0;
   document.getElementById(navId).innerHTML = `
     ${!isFirst ? `<button class="btn btn-secondary btn-sm" onclick="ricoNav(${session},-1)">← Sebelumnya</button>` : '<span></span>'}
@@ -949,7 +936,6 @@ async function ricoNav(session, dir) {
     if(session===1) state.p1RicosreStep = nextStep;
     else state.p2RicosreStep = nextStep;
 
-    // Kirim jawaban RICOSRE ke Google Sheets
     if(state.siswa) {
       const s = state.siswa;
       await sendToSheets({
@@ -970,14 +956,10 @@ async function ricoNav(session, dir) {
 
   buildNav(); updateHomeCards();
   renderRicosre(session);
-  // Mark materi done flags
   if(session===1 && state.p1RicosreStep > 0) state.p1MateriDone = true;
   if(session===2 && state.p2RicosreStep > 0) state.p2MateriDone = true;
 }
 
-// ═══════════════════════════════════════════
-//  PROFIL
-// ═══════════════════════════════════════════
 function renderProfil() {
   const el = document.getElementById('profilContent');
   if(!state.siswa) { el.innerHTML='<p style="color:var(--text-muted)">Belum ada data. Silakan isi absensi terlebih dahulu.</p>'; return; }
@@ -1030,21 +1012,13 @@ function renderProfil() {
     </div>` : ''}`;
 }
 
-// ═══════════════════════════════════════════
-//  INIT
-// ═══════════════════════════════════════════
-// Mark p1 and p2 materi done when navigating away
-const origGoPage = goPage;
+const origGoPage = window.goPage;
 function markMateriDone(id) {
   if(id === 'p1-ricosre') state.p1MateriDone = true;
   if(id === 'p2-ricosre') state.p2MateriDone = true;
 }
-const _goPage = window.goPage;
-
-// We override to mark done
-const realGoPage = function(id) {
+window.goPage = function(id) {
   markMateriDone(id);
-  // call inline
   if(!isUnlocked(id)) { alert('🔒 Selesaikan tahap sebelumnya terlebih dahulu!'); return; }
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
@@ -1058,7 +1032,6 @@ const realGoPage = function(id) {
   if(id === 'p2-ricosre') renderRicosre(2);
   if(id === 'profil') renderProfil();
 };
-window.goPage = realGoPage;
 
 buildNav();
 updateHomeCards();
