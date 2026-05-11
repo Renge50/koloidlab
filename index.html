@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KoloidLab — Media Pembelajaran Interaktif</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal: #0f9b8e; --teal-light: #1bc8b8; --teal-dark: #0a6b61;
+  --amber: #f59e0b; --rose: #e11d48; --indigo: #4338ca;
+  --bg: #f0f7f6; --bg-card: #ffffff; --text: #1a2e2c;
+  --text-muted: #5f8280; --border: rgba(15,155,142,0.15);
+  --shadow: 0 4px 24px rgba(15,155,142,0.12);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; overflow-x:hidden; }
+
+/* ── SHELL ── */
+#app { display:flex; flex-direction:column; min-height:100vh; }
+
+/* ── TOP NAV ── */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  background:rgba(240,247,246,0.95); backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 1.5rem; height:58px;
+}
+.nav-logo { font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:900; color:var(--teal); }
+.nav-logo span { color:var(--amber); }
+.nav-steps { display:flex; gap:0.2rem; }
+.nav-pill {
+  font-size:0.72rem; font-weight:600; padding:0.3rem 0.7rem;
+  border-radius:20px; color:var(--text-muted); cursor:pointer;
+  transition:all 0.2s; border:1px solid transparent;
+}
+.nav-pill.active { background:var(--teal); color:white; }
+.nav-pill.done { color:var(--teal); border-color:rgba(15,155,142,0.3); }
+.nav-pill.locked { opacity:0.4; cursor:not-allowed; }
+
+/* ── PAGE CONTAINER ── */
+.page { display:none; padding:78px 1.5rem 2rem; max-width:900px; margin:0 auto; animation:fadeIn 0.4s ease; }
+.page.active { display:block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:none} }
+
+/* ── PAGE HEADER ── */
+.page-header { text-align:center; padding:2rem 0 1.5rem; }
+.page-badge {
+  display:inline-flex; align-items:center; gap:0.4rem;
+  background:rgba(15,155,142,0.1); border:1px solid rgba(15,155,142,0.2);
+  color:var(--teal); padding:0.3rem 0.9rem; border-radius:20px;
+  font-size:0.72rem; font-weight:700; letter-spacing:0.5px; text-transform:uppercase;
+  margin-bottom:1rem;
+}
+.page-title { font-family:'Playfair Display',serif; font-size:clamp(1.8rem,4vw,2.8rem); font-weight:900; color:var(--text); margin-bottom:0.5rem; }
+.page-title em { color:var(--teal); font-style:normal; }
+.page-sub { color:var(--text-muted); font-size:0.95rem; line-height:1.7; max-width:560px; margin:0 auto; }
+
+/* ── CARDS ── */
+.card { background:white; border-radius:20px; border:1px solid var(--border); padding:1.75rem; margin-bottom:1.25rem; }
+.card h3 { font-family:'Playfair Display',serif; font-size:1.15rem; color:var(--teal); margin-bottom:0.75rem; }
+.card p { font-size:0.9rem; color:var(--text-muted); line-height:1.7; }
+
+/* ── STEP INDICATOR (RICOSRE) ── */
+.step-indicator {
+  display:flex; gap:0; margin:1.5rem 0;
+  background:white; border-radius:14px; padding:0.5rem;
+  border:1px solid var(--border); overflow-x:auto;
+}
+.step-dot {
+  flex:1; text-align:center; padding:0.6rem 0.4rem;
+  border-radius:10px; font-size:0.7rem; font-weight:600;
+  color:var(--text-muted); transition:all 0.3s; min-width:70px;
+}
+.step-dot.active { background:var(--teal); color:white; }
+.step-dot.done { color:var(--teal); background:rgba(15,155,142,0.08); }
+.step-dot .step-letter { font-size:1rem; display:block; }
+
+/* ── RICOSRE TASK CARD ── */
+.ricosre-task {
+  border-left:4px solid var(--teal);
+  background:rgba(15,155,142,0.04);
+  border-radius:0 16px 16px 0;
+  padding:1.25rem 1.5rem; margin:1.25rem 0;
+}
+.ricosre-task .task-label {
+  font-size:0.72rem; font-weight:700; color:var(--teal);
+  text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.4rem;
+}
+.ricosre-task .task-q { font-size:0.95rem; font-weight:600; color:var(--text); margin-bottom:0.75rem; }
+
+/* ── TEXTAREA ── */
+.answer-box {
+  width:100%; border-radius:12px; border:1.5px solid var(--border);
+  padding:0.9rem 1rem; font-family:'DM Sans',sans-serif;
+  font-size:0.9rem; color:var(--text); resize:vertical; min-height:100px;
+  background:white; transition:border-color 0.2s;
+}
+.answer-box:focus { outline:none; border-color:var(--teal); }
+.answer-box.saved { border-color:#10b981; background:rgba(16,185,129,0.04); }
+
+/* ── BUTTONS ── */
+.btn { border:none; border-radius:30px; padding:0.75rem 1.75rem; font-family:'DM Sans',sans-serif; font-size:0.9rem; font-weight:600; cursor:pointer; transition:all 0.25s; display:inline-flex; align-items:center; gap:0.5rem; }
+.btn-primary { background:var(--teal); color:white; }
+.btn-primary:hover { background:var(--teal-dark); transform:translateY(-2px); box-shadow:0 8px 24px rgba(15,155,142,0.35); }
+.btn-secondary { background:transparent; color:var(--teal); border:2px solid var(--teal); }
+.btn-secondary:hover { background:var(--teal); color:white; }
+.btn-amber { background:var(--amber); color:white; }
+.btn-amber:hover { background:#d97706; }
+.btn-sm { padding:0.5rem 1.1rem; font-size:0.82rem; }
+.btn-row { display:flex; gap:0.75rem; flex-wrap:wrap; margin-top:1.25rem; }
+
+/* ── PROGRESS BAR ── */
+.prog-bar { height:6px; background:var(--border); border-radius:3px; overflow:hidden; margin:0.5rem 0; }
+.prog-fill { height:100%; background:var(--teal); border-radius:3px; transition:width 0.4s ease; }
+
+/* ── ABSENSI ── */
+.absen-form { display:flex; flex-direction:column; gap:1rem; }
+.form-group { display:flex; flex-direction:column; gap:0.35rem; }
+.form-label { font-size:0.82rem; font-weight:600; color:var(--text-muted); }
+.form-input {
+  border:1.5px solid var(--border); border-radius:10px; padding:0.75rem 1rem;
+  font-family:'DM Sans',sans-serif; font-size:0.9rem; color:var(--text); background:white;
+  transition:border-color 0.2s;
+}
+.form-input:focus { outline:none; border-color:var(--teal); }
+.form-select { appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%235f8280' d='M6 8L0 0h12z'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 1rem center; }
+
+/* ── QUIZ / SOAL ── */
+.quiz-wrap { max-width:720px; margin:0 auto; }
+.quiz-prog-row { display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem; }
+.quiz-num { font-family:'DM Mono',monospace; font-size:0.8rem; color:var(--text-muted); white-space:nowrap; }
+.quiz-context { background:rgba(15,155,142,0.06); border-left:3px solid var(--teal); padding:0.9rem 1.1rem; border-radius:0 10px 10px 0; font-size:0.87rem; color:var(--text-muted); line-height:1.7; margin-bottom:1.25rem; }
+.quiz-question { font-size:1rem; font-weight:600; color:var(--text); line-height:1.6; margin-bottom:1.25rem; }
+.quiz-options { display:flex; flex-direction:column; gap:0.65rem; }
+.quiz-opt {
+  padding:0.9rem 1.1rem; border-radius:12px; border:2px solid var(--border);
+  background:white; font-family:'DM Sans',sans-serif; font-size:0.88rem; color:var(--text);
+  cursor:pointer; text-align:left; transition:all 0.2s; display:flex; align-items:center; gap:0.7rem;
+}
+.quiz-opt:hover:not(:disabled) { border-color:var(--teal); background:rgba(15,155,142,0.04); }
+.quiz-opt.correct { border-color:#10b981; background:rgba(16,185,129,0.08); color:#065f46; }
+.quiz-opt.wrong { border-color:#ef4444; background:rgba(239,68,68,0.08); color:#7f1d1d; }
+.quiz-opt:disabled { cursor:not-allowed; }
+.opt-letter { width:26px; height:26px; border-radius:50%; border:2px solid currentColor; display:flex; align-items:center; justify-content:center; font-size:0.72rem; font-weight:700; flex-shrink:0; }
+.quiz-feedback { margin-top:1rem; padding:0.9rem 1.1rem; border-radius:10px; font-size:0.87rem; line-height:1.6; display:none; }
+.quiz-feedback.show { display:block; }
+.quiz-feedback.ok { background:rgba(16,185,129,0.1); color:#065f46; }
+.quiz-feedback.bad { background:rgba(239,68,68,0.08); color:#7f1d1d; }
+.quiz-nav-row { display:flex; justify-content:space-between; align-items:center; margin-top:1.25rem; }
+.quiz-score-label { font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; color:var(--teal); }
+.quiz-result { text-align:center; padding:2rem 1rem; }
+.result-emoji { font-size:3.5rem; margin-bottom:0.75rem; }
+.result-title { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:900; color:var(--text); margin-bottom:0.4rem; }
+.result-big { font-family:'Playfair Display',serif; font-size:2.8rem; font-weight:900; color:var(--teal); }
+.result-pct { font-size:1rem; color:var(--text-muted); margin-bottom:1rem; }
+
+/* ── COMPARISON TABLE ── */
+.comp-table { width:100%; border-collapse:collapse; border-radius:14px; overflow:hidden; border:1px solid var(--border); }
+.comp-table th { background:var(--teal); color:white; padding:0.8rem 0.9rem; font-size:0.83rem; font-weight:600; text-align:left; }
+.comp-table td { padding:0.75rem 0.9rem; font-size:0.83rem; border-bottom:1px solid var(--border); }
+.comp-table tr:last-child td { border-bottom:none; }
+.comp-table tr:nth-child(even) td { background:rgba(15,155,142,0.03); }
+
+/* ── JENIS KOLOID GRID ── */
+.jenis-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:0.75rem; margin-top:1rem; }
+.jenis-card { background:white; border-radius:12px; padding:0.9rem; border:1px solid var(--border); text-align:center; }
+.jenis-card .emoji { font-size:1.6rem; margin-bottom:0.4rem; }
+.jenis-card h5 { font-size:0.82rem; font-weight:600; color:var(--teal); margin-bottom:0.2rem; }
+.jenis-card .ph { font-family:'DM Mono',monospace; font-size:0.7rem; color:var(--text-muted); }
+.jenis-card .ex { font-size:0.75rem; color:var(--text-muted); margin-top:0.2rem; }
+
+/* ── SIFAT LIST ── */
+.sifat-list { display:flex; flex-direction:column; gap:0.75rem; margin-top:0.75rem; }
+.sifat-item { background:white; border-radius:12px; padding:1rem 1.25rem; border:1px solid var(--border); display:flex; gap:0.75rem; align-items:flex-start; }
+.sifat-icon { font-size:1.3rem; flex-shrink:0; }
+.sifat-item h5 { font-size:0.9rem; font-weight:600; color:var(--teal); margin-bottom:0.2rem; }
+.sifat-item p { font-size:0.83rem; color:var(--text-muted); line-height:1.6; }
+
+/* ── LOCKED OVERLAY ── */
+.locked-msg { text-align:center; padding:3rem 2rem; color:var(--text-muted); }
+.locked-msg .lock-icon { font-size:3rem; margin-bottom:1rem; }
+.locked-msg h3 { font-family:'Playfair Display',serif; font-size:1.4rem; color:var(--text); margin-bottom:0.5rem; }
+
+/* ── HERO page ── */
+.hero-section { padding:1.5rem 0 2.5rem; text-align:center; }
+.hero-section h1 { font-family:'Playfair Display',serif; font-size:clamp(2rem,5vw,3.5rem); font-weight:900; color:var(--text); margin-bottom:0.75rem; }
+.hero-section h1 em { color:var(--teal); font-style:normal; }
+.hero-stats { display:flex; gap:1.5rem; justify-content:center; flex-wrap:wrap; margin:1.5rem 0; }
+.stat { text-align:center; }
+.stat-num { font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:900; color:var(--teal); }
+.stat-label { font-size:0.75rem; color:var(--text-muted); font-weight:500; }
+.action-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; margin-top:1.5rem; }
+.action-card {
+  background:white; border-radius:16px; border:1px solid var(--border);
+  padding:1.5rem; text-align:center; cursor:pointer; transition:all 0.25s;
+}
+.action-card:hover { transform:translateY(-4px); box-shadow:var(--shadow); border-color:rgba(15,155,142,0.3); }
+.action-card .ac-icon { font-size:2rem; margin-bottom:0.75rem; }
+.action-card h4 { font-size:0.95rem; font-weight:700; color:var(--text); margin-bottom:0.3rem; }
+.action-card p { font-size:0.78rem; color:var(--text-muted); }
+.action-card.locked-card { opacity:0.5; cursor:not-allowed; }
+.action-card.locked-card:hover { transform:none; box-shadow:none; }
+
+/* ── BADGE DONE ── */
+.badge-done { display:inline-flex; align-items:center; gap:0.3rem; background:rgba(16,185,129,0.1); color:#10b981; border:1px solid rgba(16,185,129,0.2); border-radius:20px; padding:0.25rem 0.75rem; font-size:0.72rem; font-weight:700; }
+.badge-locked { display:inline-flex; align-items:center; gap:0.3rem; background:rgba(100,100,100,0.08); color:var(--text-muted); border:1px solid rgba(100,100,100,0.15); border-radius:20px; padding:0.25rem 0.75rem; font-size:0.72rem; font-weight:700; }
+
+/* ── SECTION LABEL ── */
+.sec-label { font-size:0.7rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--teal); margin-bottom:0.5rem; }
+.sec-title { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:900; color:var(--text); margin-bottom:0.75rem; }
+
+/* ── INFO GRID ── */
+.info-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1rem; margin-top:1rem; }
+.info-card { background:white; border-radius:14px; padding:1.25rem; border:1px solid var(--border); }
+.info-card h4 { font-size:0.92rem; font-weight:700; color:var(--teal); margin-bottom:0.5rem; }
+.info-card p { font-size:0.85rem; color:var(--text-muted); line-height:1.6; }
+
+/* MOBILE */
+@media(max-width:640px) {
+  nav { padding:0 1rem; }
+  .nav-steps { display:none; }
+  .page { padding:68px 1rem 2rem; }
+  .action-grid { grid-template-columns:1fr 1fr; }
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ═══ TOP NAV ═══ -->
+<nav>
+  <div class="nav-logo">Koloid<span>Lab</span></div>
+  <div class="nav-steps" id="navSteps"></div>
+</nav>
+
+<!-- ═══ PAGES ═══ -->
+
+<!-- PAGE: BERANDA -->
+<div class="page active" id="page-home">
+  <div class="hero-section">
+    <div class="page-badge">⚗️ Media Pembelajaran Interaktif · Kimia SMA</div>
+    <h1>Belajar <em>Koloid</em><br>dengan Model RICOSRE</h1>
+    <p class="page-sub">Jelajahi dunia sistem koloid melalui pendekatan saintifik RICOSRE — dari membaca fenomena nyata hingga memperluas pemecahan masalah secara ilmiah.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">2</div><div class="stat-label">Pertemuan</div></div>
+      <div class="stat"><div class="stat-num">6</div><div class="stat-label">Tahap RICOSRE</div></div>
+      <div class="stat"><div class="stat-num">10</div><div class="stat-label">Soal Latihan</div></div>
+    </div>
+  </div>
+
+  <div id="homeCards" class="action-grid"></div>
+  <div class="btn-row" style="justify-content:center; margin-top:2rem;">
+    <button class="btn btn-primary" onclick="goPage('absensi')">📋 Mulai — Isi Absensi Dulu</button>
+  </div>
+</div>
+
+<!-- PAGE: ABSENSI -->
+<div class="page" id="page-absensi">
+  <div class="page-header">
+    <div class="page-badge">📋 Langkah Pertama</div>
+    <h2 class="page-title">Absensi <em>Siswa</em></h2>
+    <p class="page-sub">Isi data dirimu sebelum memulai pembelajaran.</p>
+  </div>
+  <div class="card">
+    <div id="absensiDone" style="display:none;" class="badge-done" style="margin-bottom:1rem;">✅ Absensi sudah diisi</div>
+    <div class="absen-form" id="absensiForm">
+      <div class="form-group">
+        <label class="form-label">Nama Lengkap *</label>
+        <input class="form-input" type="text" id="siswaName" placeholder="Nama lengkap kamu...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nomor Absen *</label>
+        <input class="form-input" type="number" id="siswaNo" placeholder="Contoh: 15" min="1" max="40">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Kelas *</label>
+        <select class="form-input form-select" id="siswaKelas">
+          <option value="">-- Pilih Kelas --</option>
+          <option>XI IPA 1</option><option>XI IPA 2</option><option>XI IPA 3</option>
+          <option>XI IPA 4</option><option>XI IPA 5</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Pertemuan yang diikuti *</label>
+        <select class="form-input form-select" id="siswaPertemuan">
+          <option value="">-- Pilih --</option>
+          <option value="1">Pertemuan 1 — Sistem Koloid & Sifat-sifat Koloid</option>
+          <option value="2">Pertemuan 2 — Pembuatan Koloid & Aplikasi</option>
+        </select>
+      </div>
+    </div>
+    <div id="absensiSaved" style="display:none; padding:1rem; background:rgba(16,185,129,0.08); border-radius:12px; border:1px solid rgba(16,185,129,0.2);">
+      <p style="font-size:0.9rem; color:#065f46; font-weight:600;">✅ Absensi tersimpan!</p>
+      <p id="absensiInfo" style="font-size:0.85rem; color:var(--text-muted); margin-top:0.25rem;"></p>
+    </div>
+    <div class="btn-row" id="absensiBtn">
+      <button class="btn btn-primary" onclick="simpanAbsensi()">💾 Simpan Absensi</button>
+    </div>
+    <div class="btn-row" id="absensiNext" style="display:none;">
+      <button class="btn btn-primary" onclick="goPage('pretest')">📝 Lanjut ke Pretest →</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: PRETEST -->
+<div class="page" id="page-pretest">
+  <div class="page-header">
+    <div class="page-badge">📝 Sebelum Belajar</div>
+    <h2 class="page-title">Pre<em>test</em></h2>
+    <p class="page-sub">Uji pengetahuan awalmu tentang koloid. Tidak perlu khawatir — ini bukan nilai ujian, tapi tolok ukur awal.</p>
+  </div>
+  <div class="card quiz-wrap">
+    <div id="pretestContainer"></div>
+  </div>
+</div>
+
+<!-- PAGE: PETUNJUK -->
+<div class="page" id="page-petunjuk">
+  <div class="page-header">
+    <div class="page-badge">📌 Panduan</div>
+    <h2 class="page-title">Petunjuk <em>Penggunaan</em></h2>
+  </div>
+  <div class="card">
+    <h3>🗺️ Navigasi Website</h3>
+    <div class="sifat-list" style="margin-top:0.75rem;">
+      <div class="sifat-item"><div class="sifat-icon">1️⃣</div><div><h5>Mulai dari Absensi</h5><p>Isi absensi terlebih dahulu sebelum mengakses materi. Data absensi diperlukan untuk rekap kehadiran.</p></div></div>
+      <div class="sifat-item"><div class="sifat-icon">2️⃣</div><div><h5>Kerjakan Pretest</h5><p>Setelah absensi, kerjakan soal pretest untuk mengukur pengetahuan awalmu. Jawab dengan jujur.</p></div></div>
+      <div class="sifat-item"><div class="sifat-icon">3️⃣</div><div><h5>Ikuti Materi & RICOSRE</h5><p>Pelajari materi per pertemuan secara berurutan. Selesaikan setiap tahap RICOSRE sebelum lanjut ke tahap berikutnya.</p></div></div>
+      <div class="sifat-item"><div class="sifat-icon">4️⃣</div><div><h5>Kerjakan Posttest</h5><p>Setelah selesai kedua pertemuan, kerjakan posttest untuk mengukur peningkatan pemahamanmu.</p></div></div>
+      <div class="sifat-item"><div class="sifat-icon">🔒</div><div><h5>Fitur Terkunci</h5><p>Halaman yang terkunci (🔒) hanya bisa diakses setelah menyelesaikan tahap sebelumnya secara berurutan.</p></div></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="goPage('absensi')">📋 Mulai Absensi →</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: PERTEMUAN 1 — MATERI -->
+<div class="page" id="page-p1-materi">
+  <div class="page-header">
+    <div class="page-badge">📚 Pertemuan 1</div>
+    <h2 class="page-title"><em>Sistem</em> Koloid</h2>
+    <p class="page-sub">Pelajari pengertian, komponen, jenis-jenis koloid, dan perbandingannya dengan larutan & suspensi.</p>
+  </div>
+
+  <div class="card">
+    <div class="sec-label">Konteks Awal</div>
+    <h3>🎨 Fenomena Koloid di Sekitar Kita</h3>
+    <p>Pernahkah kamu melihat <strong>cat air</strong> yang digunakan untuk melukis? Cat air merupakan koloid karena partikel dalam cat dapat tersebar merata dalam air membentuk campuran yang bersifat koloid. Begitu pula kabut pagi, susu, dan santan yang kita konsumsi sehari-hari.</p>
+  </div>
+
+  <div class="info-grid">
+    <div class="info-card">
+      <h4>🧪 Apa itu Koloid?</h4>
+      <p>Sistem koloid adalah campuran yang keadaannya terletak di antara larutan dan suspensi. Partikelnya berukuran <strong>1 nm – 100 nm</strong> sehingga tidak dapat disaring dengan kertas saring biasa, tetapi bisa dengan penyaring ultra.</p>
+    </div>
+    <div class="info-card">
+      <h4>📜 Asal Kata</h4>
+      <p>Nama <em>"koloid"</em> diberikan oleh <strong>Thomas Graham (1861)</strong>, dari bahasa Yunani: <em>kolla</em> (lem) + <em>oid</em> (seperti). Koloid memiliki sifat difusi yang lambat seperti lem.</p>
+    </div>
+    <div class="info-card">
+      <h4>🔵 Komponen Koloid</h4>
+      <p>Koloid terdiri dari: <strong>fase terdispersi</strong> (diskontinu/terputus-putus) dan <strong>medium pendispersi</strong> (kontinu). Contoh: susu = fase terdispersi (lemak) + medium (air).</p>
+    </div>
+    <div class="info-card">
+      <h4>🔦 Efek Tyndall</h4>
+      <p>Koloid dapat menghamburkan cahaya (efek Tyndall). Inilah yang membedakannya dari larutan sejati — seperti sorot lampu di kabut yang terlihat berpendar.</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:1.25rem;">
+    <h3>⚖️ Perbandingan Sistem Dispersi</h3>
+    <table class="comp-table" style="margin-top:0.75rem;">
+      <tr><th>Sifat</th><th>Larutan</th><th>Koloid</th><th>Suspensi</th></tr>
+      <tr><td>Ukuran partikel</td><td>&lt; 1 nm</td><td>1–100 nm</td><td>&gt; 100 nm</td></tr>
+      <tr><td>Tampilan</td><td>Jernih/transparan</td><td>Agak keruh/keruh</td><td>Keruh/pekat</td></tr>
+      <tr><td>Dapat disaring?</td><td>Tidak</td><td>Tidak (kertas biasa)</td><td>Ya</td></tr>
+      <tr><td>Efek Tyndall</td><td>Tidak</td><td>Ya</td><td>Tidak jelas</td></tr>
+      <tr><td>Kestabilan</td><td>Sangat stabil</td><td>Relatif stabil</td><td>Tidak stabil</td></tr>
+      <tr><td>Contoh</td><td>Larutan gula</td><td>Susu, kabut</td><td>Pasir dalam air</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>🗂️ Jenis-Jenis Koloid</h3>
+    <div class="jenis-grid">
+      <div class="jenis-card"><div class="emoji">🌫️</div><h5>Aerosol Cair</h5><div class="ph">Cair / Gas</div><div class="ex">Kabut, awan, hairspray</div></div>
+      <div class="jenis-card"><div class="emoji">💨</div><h5>Aerosol Padat</h5><div class="ph">Padat / Gas</div><div class="ex">Asap, debu di udara</div></div>
+      <div class="jenis-card"><div class="emoji">🥛</div><h5>Emulsi</h5><div class="ph">Cair / Cair</div><div class="ex">Susu, santan, mayones</div></div>
+      <div class="jenis-card"><div class="emoji">🧴</div><h5>Emulsi Padat</h5><div class="ph">Cair / Padat</div><div class="ex">Mentega, keju</div></div>
+      <div class="jenis-card"><div class="emoji">🫧</div><h5>Buih</h5><div class="ph">Gas / Cair</div><div class="ex">Busa sabun, krim</div></div>
+      <div class="jenis-card"><div class="emoji">🧊</div><h5>Buih Padat</h5><div class="ph">Gas / Padat</div><div class="ex">Batu apung, styrofoam</div></div>
+      <div class="jenis-card"><div class="emoji">🎨</div><h5>Sol</h5><div class="ph">Padat / Cair</div><div class="ex">Cat, tinta, tepung kanji</div></div>
+      <div class="jenis-card"><div class="emoji">🪩</div><h5>Sol Padat</h5><div class="ph">Padat / Padat</div><div class="ex">Kaca berwarna, tanah</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🔬 Sifat-Sifat Koloid</h3>
+    <div class="sifat-list">
+      <div class="sifat-item"><div class="sifat-icon">🔦</div><div><h5>Efek Tyndall</h5><p>Penghamburan cahaya oleh partikel koloid. Contoh: berkas cahaya terlihat jelas menembus kabut atau asap.</p></div></div>
+      <div class="sifat-item"><div class="sifat-icon">🎲</div><div><h5>Gerak Brown</h5><p>Gerakan acak partikel koloid akibat tumbukan dengan molekul medium. Menyebabkan koloid tidak mudah mengendap.</p></div></div>
+      <div class="sifat-item"><div class="sifat-icon">⚡</div><div><h5>Elektroforesis</h5><p>Pergerakan partikel koloid bermuatan dalam medan listrik. Digunakan untuk memisahkan protein dalam laboratorium.</p></div></div>
+      <div class="sifat-item"><div class="sifat-icon">🧲</div><h5></h5><div><h5>Adsorpsi & Koagulasi</h5><p>Adsorpsi: partikel koloid menyerap ion di permukaannya. Koagulasi: penggumpalan koloid akibat penetralan muatan.</p></div></div>
+      <div class="sifat-item"><div class="sifat-icon">🛡️</div><div><h5>Koloid Pelindung</h5><p>Koloid yang mencegah koloid lain dari koagulasi. Contoh: gelatin dalam es krim mencegah pemisahan fase.</p></div></div>
+      <div class="sifat-item"><div class="sifat-icon">🧫</div><div><h5>Dialisis</h5><p>Proses pemurnian koloid dari ion-ion pengganggu menggunakan membran semipermeabel.</p></div></div>
+    </div>
+  </div>
+
+  <div class="btn-row" style="justify-content:space-between; margin-top:1.5rem;">
+    <button class="btn btn-secondary btn-sm" onclick="goPage('pretest')">← Kembali</button>
+    <button class="btn btn-primary" onclick="goPage('p1-ricosre')">Lanjut ke RICOSRE Pertemuan 1 →</button>
+  </div>
+</div>
+
+<!-- PAGE: PERTEMUAN 1 — RICOSRE -->
+<div class="page" id="page-p1-ricosre">
+  <div class="page-header">
+    <div class="page-badge">🧪 RICOSRE — Pertemuan 1</div>
+    <h2 class="page-title">Sistem Koloid di <em>Sungai Mahakam</em></h2>
+    <p class="page-sub">Ikuti 6 tahap RICOSRE secara berurutan. Selesaikan setiap tahap untuk membuka tahap berikutnya.</p>
+  </div>
+
+  <div class="step-indicator" id="p1StepIndicator"></div>
+
+  <!-- STEP PAGES inside RICOSRE P1 -->
+  <div id="p1-step-content"></div>
+  <div class="btn-row" style="margin-top:1.5rem;" id="p1StepNav"></div>
+</div>
+
+<!-- PAGE: PERTEMUAN 2 — MATERI -->
+<div class="page" id="page-p2-materi">
+  <div class="page-header">
+    <div class="page-badge">📚 Pertemuan 2</div>
+    <h2 class="page-title"><em>Pembuatan</em> Koloid</h2>
+    <p class="page-sub">Pelajari metode pembuatan koloid dan peranan koloid dalam kehidupan sehari-hari.</p>
+  </div>
+
+  <div class="card">
+    <div class="sec-label">Materi Pertemuan 2</div>
+    <h3>🏭 Cara Pembuatan Koloid</h3>
+    <p>Koloid dapat dibuat melalui dua metode utama: <strong>kondensasi</strong> (dari partikel kecil menjadi koloid) dan <strong>dispersi</strong> (dari partikel besar menjadi koloid).</p>
+  </div>
+
+  <div class="info-grid">
+    <div class="info-card">
+      <h4>🔽 Kondensasi</h4>
+      <p>Pembuatan koloid dari partikel yang lebih kecil (larutan/ion) menjadi partikel berukuran koloid. Metode: reaksi kimia (hidrolisis, redoks, dekomposisi ganda).</p>
+    </div>
+    <div class="info-card">
+      <h4>🔼 Dispersi</h4>
+      <p>Pembuatan koloid dari partikel besar (suspensi) menjadi partikel berukuran koloid. Metode: mekanik (penggilingan), peptisasi, busur listrik Bredig.</p>
+    </div>
+    <div class="info-card">
+      <h4>🌊 Koloid Hidrofil & Hidrofob</h4>
+      <p>Koloid <strong>hidrofil</strong>: fase terdispersi suka air (protein, pati). Koloid <strong>hidrofob</strong>: fase terdispersi tidak suka air (sol emas, sol belerang). Hidrofil lebih stabil.</p>
+    </div>
+    <div class="info-card">
+      <h4>🧹 Dialisis & Elektrodialisis</h4>
+      <p>Proses pemurnian koloid menggunakan membran semipermeabel untuk menghilangkan ion-ion yang tidak dikehendaki dari sistem koloid.</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:1.25rem;">
+    <h3>🌐 Peranan Koloid dalam Kehidupan</h3>
+    <div class="sifat-list">
+      <div class="sifat-item"><div class="sifat-icon">💧</div><div><h5>Penjernihan Air</h5><p>Tawas (Al₂(SO₄)₃) digunakan sebagai koagulan yang menggumpalkan partikel koloid lumpur dalam air, membantu proses pengolahan air bersih.</p></div></div>
+      <div class="sifat-item"><div class="sifat-icon">🏭</div><div><h5>Industri Makanan</h5><p>Emulsifier seperti lesitin digunakan dalam pembuatan es krim, margarin, dan mayones sebagai koloid pelindung agar fase tidak terpisah.</p></div></div>
+      <div class="sifat-item"><div class="sifat-icon">🏥</div><div><h5>Dunia Kesehatan</h5><p>Norit (karbon aktif) memanfaatkan adsorpsi koloid untuk menyerap racun di saluran pencernaan. Plasma darah pun merupakan sistem koloid.</p></div></div>
+      <div class="sifat-item"><div class="sifat-icon">🌫️</div><div><h5>Pengendalian Polusi</h5><p>Alat Cottrel Precipitator memanfaatkan elektroforesis untuk mengendapkan partikel koloid berbahaya dalam asap pabrik sebelum dilepas ke udara.</p></div></div>
+    </div>
+  </div>
+
+  <div class="btn-row" style="justify-content:space-between; margin-top:1.5rem;">
+    <button class="btn btn-secondary btn-sm" onclick="goPage('p1-ricosre')">← Pertemuan 1</button>
+    <button class="btn btn-primary" onclick="goPage('p2-ricosre')">Lanjut ke RICOSRE Pertemuan 2 →</button>
+  </div>
+</div>
+
+<!-- PAGE: PERTEMUAN 2 — RICOSRE -->
+<div class="page" id="page-p2-ricosre">
+  <div class="page-header">
+    <div class="page-badge">🧪 RICOSRE — Pertemuan 2</div>
+    <h2 class="page-title">Penjernihan Air <em>Berbasis Koloid</em></h2>
+    <p class="page-sub">Terapkan 6 tahap RICOSRE pada konteks penjernihan air menggunakan konsep koloid.</p>
+  </div>
+
+  <div class="step-indicator" id="p2StepIndicator"></div>
+  <div id="p2-step-content"></div>
+  <div class="btn-row" style="margin-top:1.5rem;" id="p2StepNav"></div>
+</div>
+
+<!-- PAGE: POSTTEST -->
+<div class="page" id="page-posttest">
+  <div class="page-header">
+    <div class="page-badge">🏁 Evaluasi Akhir</div>
+    <h2 class="page-title">Post<em>test</em></h2>
+    <p class="page-sub">Setelah mengikuti seluruh pembelajaran, uji kembali pemahamanmu tentang koloid!</p>
+  </div>
+  <div class="card quiz-wrap">
+    <div id="posttestContainer"></div>
+  </div>
+</div>
+
+<!-- PAGE: PROFIL -->
+<div class="page" id="page-profil">
+  <div class="page-header">
+    <div class="page-badge">👤 Profil</div>
+    <h2 class="page-title">Profil <em>Siswa</em></h2>
+  </div>
+  <div class="card" id="profilContent">
+    <p style="color:var(--text-muted);">Belum ada data. Silakan isi absensi terlebih dahulu.</p>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<script>
+// ═══════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════
+const state = {
+  siswa: null,           // {name, no, kelas, pertemuan}
+  pretestDone: false,
+  pretestScore: 0,
+  p1MateriDone: false,
+  p1RicosreStep: 0,      // 0-5 (current step), 6 = done
+  p1RicoAnswers: {},     // {step: answer}
+  p2MateriDone: false,
+  p2RicosreStep: 0,
+  p2RicoAnswers: {},
+  posttestDone: false,
+  posttestScore: 0,
+  currentPage: 'home',
+};
+
+// ═══════════════════════════════════════════
+//  NAV CONFIG
+// ═══════════════════════════════════════════
+const NAV_ITEMS = [
+  { id:'home',      label:'🏠 Beranda' },
+  { id:'absensi',   label:'📋 Absensi' },
+  { id:'petunjuk',  label:'📌 Petunjuk' },
+  { id:'pretest',   label:'📝 Pretest' },
+  { id:'p1-materi', label:'📚 Materi 1' },
+  { id:'p1-ricosre',label:'🧪 RICOSRE 1' },
+  { id:'p2-materi', label:'📚 Materi 2' },
+  { id:'p2-ricosre',label:'🧪 RICOSRE 2' },
+  { id:'posttest',  label:'🏁 Posttest' },
+  { id:'profil',    label:'👤 Profil' },
+];
+
+function isUnlocked(id) {
+  switch(id) {
+    case 'home': case 'petunjuk': return true;
+    case 'absensi': return true;
+    case 'pretest': return !!state.siswa;
+    case 'p1-materi': return state.pretestDone;
+    case 'p1-ricosre': return state.p1MateriDone;
+    case 'p2-materi': return state.p1RicosreStep >= 6;
+    case 'p2-ricosre': return state.p2MateriDone;
+    case 'posttest': return state.p2RicosreStep >= 6;
+    case 'profil': return true;
+    default: return false;
+  }
+}
+
+function buildNav() {
+  const wrap = document.getElementById('navSteps');
+  wrap.innerHTML = NAV_ITEMS.map(n => {
+    const unlocked = isUnlocked(n.id);
+    const active = state.currentPage === n.id;
+    let cls = 'nav-pill';
+    if(active) cls += ' active';
+    else if(!unlocked) cls += ' locked';
+    else cls += ' done';
+    const onclick = unlocked ? `goPage('${n.id}')` : '';
+    return `<div class="${cls}" ${onclick ? `onclick="${onclick}"` : ''}>${n.label}</div>`;
+  }).join('');
+}
+
+function goPage(id) {
+  if(!isUnlocked(id)) {
+    alert('🔒 Selesaikan tahap sebelumnya terlebih dahulu!');
+    return;
+  }
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  state.currentPage = id;
+  buildNav();
+  updateHomeCards();
+  window.scrollTo(0, 0);
+
+  // Init page-specific
+  if(id === 'pretest' && !state.pretestDone) renderQuiz('pretest');
+  if(id === 'posttest' && !state.posttestDone) renderQuiz('posttest');
+  if(id === 'p1-ricosre') renderRicosre(1);
+  if(id === 'p2-ricosre') renderRicosre(2);
+  if(id === 'profil') renderProfil();
+}
+
+// ═══════════════════════════════════════════
+//  HOME CARDS
+// ═══════════════════════════════════════════
+function updateHomeCards() {
+  const items = [
+    { id:'absensi', icon:'📋', label:'Absensi', desc:'Daftar kehadiranmu', always:true },
+    { id:'petunjuk', icon:'📌', label:'Petunjuk', desc:'Panduan penggunaan', always:true },
+    { id:'pretest', icon:'📝', label:'Pretest', desc:'Tes pengetahuan awal', always:false },
+    { id:'p1-materi', icon:'📚', label:'Materi 1', desc:'Sistem & sifat koloid', always:false },
+    { id:'p1-ricosre', icon:'🧪', label:'RICOSRE 1', desc:'Tahapan ilmiah sesi 1', always:false },
+    { id:'p2-materi', icon:'📚', label:'Materi 2', desc:'Pembuatan koloid', always:false },
+    { id:'p2-ricosre', icon:'🧪', label:'RICOSRE 2', desc:'Tahapan ilmiah sesi 2', always:false },
+    { id:'posttest', icon:'🏁', label:'Posttest', desc:'Evaluasi akhir', always:false },
+  ];
+  document.getElementById('homeCards').innerHTML = items.map(it => {
+    const un = isUnlocked(it.id);
+    return `<div class="action-card ${un ? '' : 'locked-card'}" onclick="${un ? `goPage('${it.id}')` : 'alert(\"🔒 Selesaikan tahap sebelumnya!\")'}" >
+      <div class="ac-icon">${it.icon}${!un ? ' 🔒' : ''}</div>
+      <h4>${it.label}</h4>
+      <p>${it.desc}</p>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════
+//  KONFIGURASI GOOGLE SHEETS
+// ═══════════════════════════════════════════
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxevdy9ylFatuWf1IaWihnmK6AR2iRzKvKCVTCX0Wx1vsmFCmySF6O8_7WkhL7eUFHJrw/exec';
+
+// ═══════════════════════════════════════════
+//  HELPER: KIRIM DATA KE GOOGLE SHEETS
+// ═══════════════════════════════════════════
+async function sendToSheets(payload) {
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+  } catch(e) {
+    console.warn('Gagal kirim ke Google Sheets:', e);
+  }
+}
+
+function getTimestamp() {
+  return new Date().toLocaleString('id-ID', { timeZone: 'Asia/Makassar' });
+}
+// ═══════════════════════════════════════════
+//  ABSENSI
+// ═══════════════════════════════════════════
+async function simpanAbsensi() {
+  const name = document.getElementById('siswaName').value.trim();
+  const no = document.getElementById('siswaNo').value.trim();
+  const kelas = document.getElementById('siswaKelas').value;
+  const pertemuan = document.getElementById('siswaPertemuan').value;
+  if(!name || !no || !kelas || !pertemuan) { alert('❗ Lengkapi semua data absensi!'); return; }
+
+  // Tampilkan loading
+  const btn = document.querySelector('#absensiBtn .btn');
+  const origText = btn.innerHTML;
+  btn.innerHTML = '⏳ Menyimpan...';
+  btn.disabled = true;
+
+  state.siswa = { name, no, kelas, pertemuan };
+
+  // Kirim ke Google Sheets
+  await sendToSheets({ type: 'absensi', name, no, kelas, pertemuan, timestamp: getTimestamp() });
+
+  document.getElementById('absensiForm').style.display = 'none';
+  document.getElementById('absensiBtn').style.display = 'none';
+  document.getElementById('absensiSaved').style.display = 'block';
+  document.getElementById('absensiNext').style.display = 'flex';
+  document.getElementById('absensiInfo').textContent = `${name} · No. ${no} · ${kelas} · Pertemuan ${pertemuan}`;
+  buildNav(); updateHomeCards();
+}
+
+// ═══════════════════════════════════════════
+//  QUIZ DATA
+// ═══════════════════════════════════════════
+const PRETEST_Q = [
+  { q:'Koloid adalah campuran yang keadaannya terletak di antara...', opts:['Larutan dan suspensi','Larutan dan emulsi','Suspensi dan emulsi','Emulsi dan sol'], ans:0, exp:'Koloid berada di antara larutan (partikel <1 nm) dan suspensi (partikel >100 nm), dengan ukuran partikel 1–100 nm.' },
+  { q:'Ukuran partikel koloid berkisar antara...', opts:['< 1 nm','1 nm – 100 nm','> 100 nm','1 mm – 1 cm'], ans:1, exp:'Partikel koloid berukuran 1–100 nm, cukup kecil untuk tidak disaring kertas biasa namun cukup besar untuk menghamburkan cahaya.' },
+  { q:'Efek Tyndall adalah...', opts:['Gerak acak partikel koloid','Penghamburan cahaya oleh partikel koloid','Koagulasi koloid','Pergerakan koloid dalam medan listrik'], ans:1, exp:'Efek Tyndall adalah penghamburan cahaya oleh partikel koloid, sehingga berkas cahaya terlihat jelas dalam medium koloid.' },
+  { q:'Susu termasuk jenis koloid...', opts:['Sol','Aerosol','Emulsi','Buih'], ans:2, exp:'Susu adalah emulsi — fase terdispersi berupa lemak (cair) dalam medium pendispersi air (cair).' },
+  { q:'Gerak Brown pada koloid disebabkan oleh...', opts:['Gaya gravitasi','Tumbukan molekul medium','Medan listrik','Penguapan'], ans:1, exp:'Gerak Brown adalah gerakan acak partikel koloid akibat tumbukan dengan molekul-molekul medium pendispersi yang bergerak terus-menerus.' },
+];
+
+const POSTTEST_Q = [
+  { ctx:'Di muara sungai, partikel tanah liat (koloid bermuatan negatif) mengendap saat bertemu air laut yang mengandung banyak elektrolit.', q:'Proses pembentukan delta sungai ini berkaitan dengan sifat koloid...', opts:['Efek Tyndall','Gerak Brown','Koagulasi','Adsorpsi'], ans:2, exp:'Pembentukan delta sungai adalah contoh Koagulasi. Ion elektrolit dalam air laut menetralkan muatan partikel koloid tanah liat, sehingga partikel bergabung dan mengendap.' },
+  { ctx:'Norit (karbon aktif) digunakan untuk mengatasi keracunan di saluran pencernaan.', q:'Sifat koloid apa yang dimanfaatkan oleh norit?', opts:['Koagulasi','Adsorpsi','Elektroforesis','Efek Tyndall'], ans:1, exp:'Norit memanfaatkan Adsorpsi — karbon aktif menyerap racun dan bakteri pada permukaan partikelnya yang sangat luas.' },
+  { ctx:'Tiga campuran: (A) gula dalam air, (B) susu dalam air, (C) pasir dalam air. Campuran C keruh dengan endapan setelah didiamkan.', q:'Urutan berdasarkan ukuran partikel dari kecil ke besar adalah...', opts:['A, B, C','C, B, A','B, A, C','A, C, B'], ans:0, exp:'Urutan: A (larutan gula, <1 nm) < B (koloid susu, 1-100 nm) < C (suspensi pasir, >100 nm).' },
+  { ctx:'Pabrik menggunakan alat "Cottrel Precipitator" untuk mengurangi polusi udara dari asap.', q:'Sifat koloid yang dimanfaatkan oleh Cottrel Precipitator adalah...', opts:['Efek Tyndall','Gerak Brown','Elektroforesis dan koagulasi','Dialisis'], ans:2, exp:'Cottrel memanfaatkan Elektroforesis — partikel koloid asap bermuatan bergerak ke elektroda, lalu mengalami koagulasi dan mengendap.' },
+  { ctx:'Seorang peneliti ingin membuat es krim yang stabil agar tidak cepat meleleh dan terpisah.', q:'Bahan tambahan apa yang digunakan sebagai koloid pelindung pada es krim?', opts:['Garam','Asam sitrat','Emulsifier (lesitin)','Baking soda'], ans:2, exp:'Emulsifier seperti lesitin berfungsi sebagai koloid pelindung yang menstabilkan emulsi lemak-air dalam es krim.' },
+  { q:'Metode pembuatan koloid dari partikel besar menjadi partikel berukuran koloid disebut...', opts:['Kondensasi','Dispersi','Hidrolisis','Peptisasi termal'], ans:1, exp:'Dispersi adalah pembuatan koloid dengan memecah partikel besar (suspensi) menjadi partikel berukuran koloid, contoh: penggilingan, peptisasi, busur Bredig.' },
+  { q:'Tawas digunakan dalam proses penjernihan air karena sifatnya sebagai...', opts:['Koloid pelindung','Koagulan','Katalis','Emulsifier'], ans:1, exp:'Tawas (Al₂(SO₄)₃) berfungsi sebagai koagulan yang menggumpalkan partikel koloid lumpur sehingga dapat diendapkan dan dipisahkan dari air.' },
+  { ctx:'Dua siswa berdebat: Sita berpendapat darah adalah larutan karena tampak cair dan homogen. Budi berpendapat darah adalah koloid.', q:'Argumen siapa yang lebih tepat?', opts:['Sita, karena darah tampak homogen','Budi, karena darah mengandung protein dan sel berukuran koloid','Keduanya salah, darah adalah suspensi','Keduanya benar'], ans:1, exp:'Budi benar! Darah adalah sistem koloid kompleks — plasma darah mengandung protein (albumin, globulin) berukuran koloid yang terdispersi.' },
+];
+
+// ═══════════════════════════════════════════
+//  QUIZ ENGINE
+// ═══════════════════════════════════════════
+function renderQuiz(type) {
+  const data = type === 'pretest' ? PRETEST_Q : POSTTEST_Q;
+  const containerId = type === 'pretest' ? 'pretestContainer' : 'posttestContainer';
+  let cur = 0, score = 0, answered = false;
+
+  function render() {
+    const c = document.getElementById(containerId);
+    if(cur >= data.length) {
+      const pct = Math.round(score/data.length*100);
+      const emoji = pct>=80?'🏆':pct>=60?'🎉':pct>=40?'📚':'💪';
+      const msg = pct>=80?'Luar biasa! Pemahaman koloidmu sangat baik!':pct>=60?'Bagus! Terus tingkatkan pemahamanmu.':pct>=40?'Cukup baik. Review materi yang belum dipahami.':'Jangan menyerah! Pelajari kembali materinya.';
+      c.innerHTML = `<div class="quiz-result">
+        <div class="result-emoji">${emoji}</div>
+        <div class="result-title">${type==='pretest'?'Pretest':'Posttest'} Selesai!</div>
+        <div class="result-big">${score}/${data.length}</div>
+        <div class="result-pct">${pct}% Benar · ${msg}</div>
+        <div class="btn-row" style="justify-content:center; margin-top:1rem;">
+          ${type==='pretest' ? `<button class="btn btn-primary" onclick="afterPretest(${score})">Lanjut ke Materi →</button>` :
+            `<button class="btn btn-primary" onclick="goPage('profil')">Lihat Profil & Rekap →</button>`}
+        </div>
+      </div>`;
+      if(type==='posttest') {
+        state.posttestDone=true; state.posttestScore=score; buildNav();
+        if(state.siswa) {
+          const s = state.siswa;
+          sendToSheets({
+            type: 'posttest',
+            name: s.name, no: s.no, kelas: s.kelas,
+            skor: score, total: data.length, persen: pct,
+            skorPretest: state.pretestScore, persen_pretest: Math.round(state.pretestScore/PRETEST_Q.length*100),
+            timestamp: getTimestamp()
+          });
+        }
+      }
+      return;
+    }
+    const q = data[cur];
+    const pct = Math.round(cur/data.length*100);
+    c.innerHTML = `
+      <div class="quiz-prog-row">
+        <div class="prog-bar" style="flex:1"><div class="prog-fill" style="width:${pct}%"></div></div>
+        <div class="quiz-num">${cur+1}/${data.length}</div>
+      </div>
+      ${q.ctx ? `<div class="quiz-context">📰 ${q.ctx}</div>` : ''}
+      <div class="quiz-question">${q.q}</div>
+      <div class="quiz-options">
+        ${q.opts.map((o,i)=>`<button class="quiz-opt" id="qo${i}" onclick="selectQ(${i},${q.ans},'${containerId}','${q.exp}')">
+          <span class="opt-letter">${'ABCD'[i]}</span>${o}
+        </button>`).join('')}
+      </div>
+      <div class="quiz-feedback" id="qfb"></div>
+      <div class="quiz-nav-row">
+        <div class="quiz-score-label">Skor: ${score}/${cur}</div>
+        <button class="btn btn-primary btn-sm" id="qnext" style="display:none;" onclick="nextQ()">Berikutnya →</button>
+      </div>`;
+
+    function selectQ(i, ans, cid, exp) {
+      if(answered) return; answered=true;
+      const opts = document.querySelectorAll('.quiz-opt');
+      opts.forEach(o=>o.disabled=true);
+      const fb = document.getElementById('qfb');
+      if(i===ans) { opts[i].classList.add('correct'); score++; fb.className='quiz-feedback ok show'; fb.innerHTML=`✅ ${exp}`; }
+      else { opts[i].classList.add('wrong'); opts[ans].classList.add('correct'); fb.className='quiz-feedback bad show'; fb.innerHTML=`❌ ${exp}`; }
+      document.getElementById('qnext').style.display='block';
+    }
+    function nextQ() { cur++; answered=false; render(); }
+    window.selectQ = selectQ;
+    window.nextQ = nextQ;
+  }
+  render();
+}
+
+async function afterPretest(score) {
+  state.pretestDone = true; state.pretestScore = score;
+  buildNav(); updateHomeCards();
+  if(state.siswa) {
+    const s = state.siswa;
+    const pct = Math.round(score / PRETEST_Q.length * 100);
+    await sendToSheets({
+      type: 'pretest',
+      name: s.name, no: s.no, kelas: s.kelas,
+      skor: score, total: PRETEST_Q.length, persen: pct,
+      timestamp: getTimestamp()
+    });
+  }
+  goPage('p1-materi');
+}
+
+// ═══════════════════════════════════════════
+//  RICOSRE DATA
+// ═══════════════════════════════════════════
+const RICOSRE_STEPS = ['R','I','C','O','S','E'];
+const RICOSRE_LABELS = ['Reading','Identifying the Problem','Constructing the Solution','Solving the Problem','Reviewing the Problem','Extending the Problem'];
+const RICOSRE_ICONS = ['📖','🔍','🧠','⚗️','🔄','🌍'];
+
+const P1_RICO_CONTENT = [
+  {
+    title:'Reading — Membaca Wacana',
+    context:`Di Kota Samarinda, Sungai Mahakam menjadi sumber air, jalur transportasi, dan pusat aktivitas ekonomi. Pada musim hujan, air sungai sering tampak lebih keruh dan berwarna kecokelatan. Kondisi ini disebabkan oleh partikel halus berupa lumpur, tanah, bahan organik, dan material erosi dari daerah hulu yang terbawa aliran permukaan. Sebagian partikel dapat mengendap, tetapi sebagian lainnya tetap tersebar lama di dalam air. Dalam sains, keadaan ini dapat dijelaskan melalui konsep sistem dispersi. Ukuran partikel menentukan apakah campuran tergolong larutan, koloid, atau suspensi. Literasi sains menuntut siswa bukan hanya mengenali istilah tersebut, tetapi juga menggunakan informasi ilmiah untuk menjelaskan mengapa air sungai dapat tetap keruh meskipun sudah didiamkan dalam waktu tertentu.`,
+    task:'Tuliskan tiga (3) informasi ilmiah penting dari wacana di atas.',
+    hint:'Petunjuk: Identifikasi fakta sains tentang partikel, sistem dispersi, dan fenomena air keruh.'
+  },
+  {
+    title:'Identifying the Problem — Merumuskan Masalah',
+    context:`Masyarakat sering beranggapan bahwa semua air keruh akan jernih jika didiamkan. Namun pengamatan menunjukkan bahwa pada beberapa kondisi air tetap keruh cukup lama. Hal ini menunjukkan adanya persoalan ilmiah yang perlu diidentifikasi berdasarkan bukti, bukan hanya berdasarkan kebiasaan atau dugaan.`,
+    task:'Rumuskan masalah ilmiah utama dari fenomena tersebut dalam bentuk pertanyaan ilmiah.',
+    hint:'Petunjuk: Gunakan kata tanya "Mengapa...", "Bagaimana...", atau "Apa yang menyebabkan..."'
+  },
+  {
+    title:'Constructing the Solution — Menyusun Hipotesis',
+    context:`Untuk menjelaskan fenomena air keruh, siswa perlu membandingkan ciri-ciri larutan, koloid, dan suspensi. Larutan sangat stabil dan tidak menghamburkan cahaya. Suspensi mudah mengendap. Koloid berada di antara keduanya dan mampu menghamburkan cahaya karena ukuran partikelnya.`,
+    task:'Susun hipotesis tentang jenis sistem dispersi pada air Sungai Mahakam saat keruh. Sertakan alasan ilmiahmu!',
+    hint:'Petunjuk: Pertimbangkan ukuran partikel, kestabilan, dan sifat-sifat sistem dispersi.'
+  },
+  {
+    title:'Solving the Problem — Memecahkan Masalah',
+    context:`Berdasarkan teori sistem dispersi: larutan (partikel <1 nm), koloid (1–100 nm), dan suspensi (>100 nm). Air sungai yang keruh mengandung campuran berbagai jenis partikel dari berbagai ukuran. Partikel besar (kerikil, pasir) cepat mengendap. Partikel berukuran koloid tetap tersebar.`,
+    task:'Jelaskan mengapa air Sungai Mahakam tetap keruh lama meskipun didiamkan! Gunakan konsep koloid dan sistem dispersi.',
+    hint:'Petunjuk: Hubungkan dengan sifat Gerak Brown dan ukuran partikel koloid.'
+  },
+  {
+    title:'Reviewing the Problem — Meninjau Ulang',
+    context:`Dalam literasi sains, jawaban harus dapat ditelusuri kembali ke data dan bukti. Kesimpulan perlu diperiksa ulang agar benar-benar konsisten dengan informasi yang tersedia.`,
+    task:'Tinjau kembali hipotesis dan penjelasanmu. Apakah sudah berbasis bukti ilmiah? Apa yang perlu diperbaiki atau ditambahkan?',
+    hint:'Petunjuk: Cek apakah penjelasanmu sudah menggunakan istilah ilmiah yang tepat dan didukung fakta.'
+  },
+  {
+    title:'Extending the Problem — Memperluas Masalah',
+    context:`Konsep koloid tidak hanya berlaku pada air sungai. Fenomena serupa dapat ditemukan pada santan, kabut pagi di tepian sungai, atau lumpur pascatambang di Kalimantan Timur.`,
+    task:'Hubungkan konsep koloid dengan satu fenomena lokal lain di sekitarmu! Jelaskan mengapa fenomena tersebut berkaitan dengan sistem koloid.',
+    hint:'Petunjuk: Pikirkan fenomena alam atau produk sehari-hari yang kamu temui di lingkunganmu.'
+  }
+];
+
+const P2_RICO_CONTENT = [
+  {
+    title:'Reading — Membaca Wacana',
+    context:`Air bersih merupakan kebutuhan mendasar masyarakat. Di banyak daerah, air dari sungai atau sumur masih berwarna keruh dan mengandung banyak partikel tersuspensi maupun koloid. Proses penjernihan air menggunakan prinsip kimia koloid — salah satunya adalah koagulasi. Tawas (Al₂(SO₄)₃) dilarutkan dalam air keruh sehingga menghasilkan Al(OH)₃ yang bersifat koloid. Koloid ini kemudian menarik partikel-partikel kecil bermuatan negatif (lumpur, bakteri) melalui adsorpsi dan menyebabkan koagulasi sehingga partikel mengendap. Proses ini disebut koagulasi dan flokulasi.`,
+    task:'Tuliskan tiga (3) informasi ilmiah penting dari wacana tentang penjernihan air di atas.',
+    hint:'Petunjuk: Fokus pada proses kimia, bahan yang digunakan, dan prinsip koloid yang terlibat.'
+  },
+  {
+    title:'Identifying the Problem — Merumuskan Masalah',
+    context:`Tidak semua air keruh dapat dijernihkan dengan metode yang sama. Berbagai faktor mempengaruhi efektivitas penjernihan, seperti jenis partikel pengotor, pH air, dan konsentrasi koagulan. Dalam situasi lapangan, penentuan dosis tawas yang tepat sangat penting.`,
+    task:'Rumuskan masalah ilmiah terkait penggunaan tawas untuk penjernihan air dalam bentuk pertanyaan ilmiah.',
+    hint:'Petunjuk: Pertimbangkan variabel yang mempengaruhi efektivitas penjernihan air.'
+  },
+  {
+    title:'Constructing the Solution — Menyusun Hipotesis',
+    context:`Koagulasi terjadi ketika muatan partikel koloid dinetralkan sehingga partikel-partikel saling bergabung dan mengendap. Tawas menghasilkan ion Al³⁺ yang dapat menetralkan muatan negatif partikel lumpur. Dengan konsentrasi tawas yang tepat, proses ini akan berjalan optimal.`,
+    task:'Susun hipotesis tentang hubungan antara konsentrasi tawas dan kejernihan air. Sertakan alasan ilmiahmu!',
+    hint:'Petunjuk: Pikirkan apa yang terjadi jika tawas terlalu sedikit atau terlalu banyak.'
+  },
+  {
+    title:'Solving the Problem — Memecahkan Masalah',
+    context:`Data hasil percobaan: (1) Tanpa tawas: air tetap keruh; (2) Tawas 1 g/L: sedikit lebih jernih; (3) Tawas 5 g/L: cukup jernih; (4) Tawas 10 g/L: sangat jernih, endapan banyak; (5) Tawas 20 g/L: air lebih jernih tapi sedikit berbau dan pH turun drastis.`,
+    task:'Analisis data percobaan tersebut! Tentukan konsentrasi tawas optimal dan jelaskan alasanmu menggunakan prinsip koloid.',
+    hint:'Petunjuk: Pertimbangkan efek koagulasi, pH, dan praktisnya penggunaan di lapangan.'
+  },
+  {
+    title:'Reviewing the Problem — Meninjau Ulang',
+    context:`Evaluasi hasil penjernihan air tidak hanya dilihat dari kejernihan visual, tetapi juga pH, kadar logam sisa, dan keamanan untuk dikonsumsi. Standar air bersih WHO mensyaratkan pH 6.5–8.5 dan turbiditas <1 NTU.`,
+    task:'Evaluasi hipotesismu tentang konsentrasi tawas optimal! Apakah jawabanmu mempertimbangkan semua aspek (kejernihan, pH, keamanan)? Apa yang perlu diperbaiki?',
+    hint:'Petunjuk: Bandingkan hipotesismu dengan data percobaan dan standar kualitas air.'
+  },
+  {
+    title:'Extending the Problem — Memperluas Masalah',
+    context:`Selain tawas, ada berbagai metode penjernihan air lain yang memanfaatkan prinsip koloid: penggunaan PAC (Poly Aluminium Chloride), koagulan alami (biji kelor), elektrokoagulasi, dan membran ultrafiltrasi (memanfaatkan ukuran partikel koloid).`,
+    task:'Hubungkan konsep koloid dengan teknologi penjernihan air modern! Jelaskan satu metode alternatif dan prinsip koloid yang digunakan.',
+    hint:'Petunjuk: Pilih salah satu teknologi dan jelaskan kaitannya dengan sifat-sifat koloid yang telah kamu pelajari.'
+  }
+];
+
+// ═══════════════════════════════════════════
+//  RICOSRE RENDERER
+// ═══════════════════════════════════════════
+function renderRicosre(session) {
+  const data = session===1 ? P1_RICO_CONTENT : P2_RICO_CONTENT;
+  const answers = session===1 ? state.p1RicoAnswers : state.p2RicoAnswers;
+  const curStep = session===1 ? state.p1RicosreStep : state.p2RicosreStep;
+  const indicatorId = `p${session}StepIndicator`;
+  const contentId = `p${session}-step-content`;
+  const navId = `p${session}StepNav`;
+
+  // Build step dots
+  document.getElementById(indicatorId).innerHTML = data.map((_,i) => {
+    let cls = 'step-dot';
+    if(i < curStep) cls += ' done';
+    else if(i === curStep) cls += ' active';
+    return `<div class="${cls}"><span class="step-letter">${RICOSRE_ICONS[i]}</span>${RICOSRE_STEPS[i]}</div>`;
+  }).join('');
+
+  if(curStep >= 6) {
+    // All done
+    document.getElementById(contentId).innerHTML = `
+      <div class="card" style="text-align:center; padding:2.5rem;">
+        <div style="font-size:3rem; margin-bottom:1rem;">🎉</div>
+        <h3 style="color:var(--teal); font-size:1.4rem; margin-bottom:0.5rem;">RICOSRE Pertemuan ${session} Selesai!</h3>
+        <p style="color:var(--text-muted);">Kamu telah menyelesaikan 6 tahap RICOSRE dengan baik. Lanjut ke ${session===1?'Materi Pertemuan 2':'Posttest'}!</p>
+        <div class="btn-row" style="justify-content:center; margin-top:1.5rem;">
+          <button class="btn btn-primary" onclick="goPage('${session===1?'p2-materi':'posttest'}')">${session===1?'📚 Materi Pertemuan 2 →':'🏁 Kerjakan Posttest →'}</button>
+        </div>
+      </div>`;
+    document.getElementById(navId).innerHTML = '';
+    if(session===1) { state.p2MateriDone = false; buildNav(); updateHomeCards(); }
+    return;
+  }
+
+  const step = data[curStep];
+  const savedAns = answers[curStep] || '';
+  const isDone = curStep < (session===1 ? state.p1RicosreStep : state.p2RicosreStep);
+
+  document.getElementById(contentId).innerHTML = `
+    <div class="card">
+      <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem;">
+        <span style="background:var(--teal);color:white;padding:0.25rem 0.75rem;border-radius:20px;font-size:0.72rem;font-weight:700;">${RICOSRE_ICONS[curStep]} LANGKAH ${curStep+1} — ${RICOSRE_LABELS[curStep].toUpperCase()}</span>
+      </div>
+      <h3>${step.title}</h3>
+      <div class="quiz-context" style="margin:1rem 0;">${step.context}</div>
+      <div class="ricosre-task">
+        <div class="task-label">📋 Tugas Literasi Sains</div>
+        <div class="task-q">${step.task}</div>
+        <p style="font-size:0.8rem;color:var(--text-muted);">${step.hint}</p>
+      </div>
+      <textarea class="answer-box ${savedAns?'saved':''}" id="ricoAnswer${session}_${curStep}" placeholder="Tuliskan jawabanmu di sini..." rows="5">${savedAns}</textarea>
+    </div>`;
+
+  // NAV
+  const isFirst = curStep === 0;
+  document.getElementById(navId).innerHTML = `
+    ${!isFirst ? `<button class="btn btn-secondary btn-sm" onclick="ricoNav(${session},-1)">← Sebelumnya</button>` : '<span></span>'}
+    <button class="btn btn-primary" onclick="ricoNav(${session},1)">${curStep===5?'✅ Selesai RICOSRE':'Simpan & Lanjut →'}</button>`;
+}
+
+async function ricoNav(session, dir) {
+  const curStep = session===1 ? state.p1RicosreStep : state.p2RicosreStep;
+  const answers = session===1 ? state.p1RicoAnswers : state.p2RicoAnswers;
+
+  if(dir === 1) {
+    const val = document.getElementById(`ricoAnswer${session}_${curStep}`).value.trim();
+    if(!val) { alert('❗ Tuliskan jawabanmu terlebih dahulu!'); return; }
+    answers[curStep] = val;
+    const nextStep = curStep + 1;
+    if(session===1) state.p1RicosreStep = nextStep;
+    else state.p2RicosreStep = nextStep;
+
+    // Kirim jawaban RICOSRE ke Google Sheets
+    if(state.siswa) {
+      const s = state.siswa;
+      await sendToSheets({
+        type: 'ricosre',
+        name: s.name, no: s.no, kelas: s.kelas,
+        pertemuan: session,
+        langkah: curStep + 1,
+        label: RICOSRE_LABELS[curStep],
+        jawaban: val,
+        timestamp: getTimestamp()
+      });
+    }
+  } else {
+    const nextStep = Math.max(0, curStep - 1);
+    if(session===1) state.p1RicosreStep = nextStep;
+    else state.p2RicosreStep = nextStep;
+  }
+
+  buildNav(); updateHomeCards();
+  renderRicosre(session);
+  // Mark materi done flags
+  if(session===1 && state.p1RicosreStep > 0) state.p1MateriDone = true;
+  if(session===2 && state.p2RicosreStep > 0) state.p2MateriDone = true;
+}
+
+// ═══════════════════════════════════════════
+//  PROFIL
+// ═══════════════════════════════════════════
+function renderProfil() {
+  const el = document.getElementById('profilContent');
+  if(!state.siswa) { el.innerHTML='<p style="color:var(--text-muted)">Belum ada data. Silakan isi absensi terlebih dahulu.</p>'; return; }
+  const s = state.siswa;
+  const p1Pct = Math.round(state.p1RicosreStep/6*100);
+  const p2Pct = Math.round(state.p2RicosreStep/6*100);
+  el.innerHTML = `
+    <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem; flex-wrap:wrap;">
+      <div style="width:60px;height:60px;border-radius:50%;background:var(--teal);color:white;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;">👤</div>
+      <div>
+        <h3 style="font-family:'Playfair Display',serif; color:var(--text);">${s.name}</h3>
+        <p style="color:var(--text-muted); font-size:0.88rem;">No. ${s.no} · ${s.kelas}</p>
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1rem; margin-bottom:1.5rem;">
+      <div style="background:rgba(15,155,142,0.08);border-radius:12px;padding:1rem;text-align:center;">
+        <div style="font-size:1.6rem;font-weight:900;color:var(--teal);font-family:'Playfair Display',serif;">${state.pretestScore}/${PRETEST_Q.length}</div>
+        <div style="font-size:0.78rem;color:var(--text-muted);">Skor Pretest</div>
+      </div>
+      <div style="background:rgba(15,155,142,0.08);border-radius:12px;padding:1rem;text-align:center;">
+        <div style="font-size:1.6rem;font-weight:900;color:var(--teal);font-family:'Playfair Display',serif;">${state.posttestScore}/${POSTTEST_Q.length}</div>
+        <div style="font-size:0.78rem;color:var(--text-muted);">Skor Posttest</div>
+      </div>
+      <div style="background:rgba(15,155,142,0.08);border-radius:12px;padding:1rem;text-align:center;">
+        <div style="font-size:1.6rem;font-weight:900;color:var(--teal);font-family:'Playfair Display',serif;">${state.p1RicosreStep}/6</div>
+        <div style="font-size:0.78rem;color:var(--text-muted);">RICOSRE Pertemuan 1</div>
+      </div>
+      <div style="background:rgba(15,155,142,0.08);border-radius:12px;padding:1rem;text-align:center;">
+        <div style="font-size:1.6rem;font-weight:900;color:var(--teal);font-family:'Playfair Display',serif;">${state.p2RicosreStep}/6</div>
+        <div style="font-size:0.78rem;color:var(--text-muted);">RICOSRE Pertemuan 2</div>
+      </div>
+    </div>
+    <div style="margin-bottom:1rem;">
+      <div style="font-size:0.82rem;font-weight:600;color:var(--text-muted);margin-bottom:0.3rem;">Progres RICOSRE Pertemuan 1</div>
+      <div class="prog-bar"><div class="prog-fill" style="width:${p1Pct}%"></div></div>
+      <div style="font-size:0.78rem;color:var(--teal);margin-top:0.2rem;">${p1Pct}% selesai</div>
+    </div>
+    <div style="margin-bottom:1.5rem;">
+      <div style="font-size:0.82rem;font-weight:600;color:var(--text-muted);margin-bottom:0.3rem;">Progres RICOSRE Pertemuan 2</div>
+      <div class="prog-bar"><div class="prog-fill" style="width:${p2Pct}%"></div></div>
+      <div style="font-size:0.78rem;color:var(--teal);margin-top:0.2rem;">${p2Pct}% selesai</div>
+    </div>
+    ${state.posttestDone && state.pretestDone ? `
+    <div style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:12px;padding:1rem;">
+      <p style="font-size:0.9rem;font-weight:600;color:#065f46;">📈 Peningkatan Hasil Belajar</p>
+      <p style="font-size:0.85rem;color:var(--text-muted);margin-top:0.3rem;">
+        Pretest: ${Math.round(state.pretestScore/PRETEST_Q.length*100)}% → Posttest: ${Math.round(state.posttestScore/POSTTEST_Q.length*100)}%
+        ${state.posttestScore > state.pretestScore ? ' ✅ Ada peningkatan!' : ' 📚 Perlu belajar lebih giat.'}
+      </p>
+    </div>` : ''}`;
+}
+
+// ═══════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════
+// Mark p1 and p2 materi done when navigating away
+const origGoPage = goPage;
+function markMateriDone(id) {
+  if(id === 'p1-ricosre') state.p1MateriDone = true;
+  if(id === 'p2-ricosre') state.p2MateriDone = true;
+}
+const _goPage = window.goPage;
+
+// We override to mark done
+const realGoPage = function(id) {
+  markMateriDone(id);
+  // call inline
+  if(!isUnlocked(id)) { alert('🔒 Selesaikan tahap sebelumnya terlebih dahulu!'); return; }
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  state.currentPage = id;
+  buildNav();
+  updateHomeCards();
+  window.scrollTo(0, 0);
+  if(id === 'pretest' && !state.pretestDone) renderQuiz('pretest');
+  if(id === 'posttest' && !state.posttestDone) renderQuiz('posttest');
+  if(id === 'p1-ricosre') renderRicosre(1);
+  if(id === 'p2-ricosre') renderRicosre(2);
+  if(id === 'profil') renderProfil();
+};
+window.goPage = realGoPage;
+
+buildNav();
+updateHomeCards();
+</script>
+</body>
+</html>
