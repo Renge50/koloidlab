@@ -539,17 +539,39 @@ const NAV_ITEMS = [
 ];
 
 function isUnlocked(id) {
+  const pertemuanAktif = state.siswa?.pertemuan;
+
   switch(id) {
-    case 'home': case 'petunjuk': return true;
-    case 'absensi': return true;
-    case 'pretest': return !!state.siswa;
-    case 'p1-materi': return state.pretestDone;
-    case 'p1-ricosre': return state.p1MateriDone;
-    case 'p2-materi': return state.p1RicosreStep >= 6;
-    case 'p2-ricosre': return state.p2MateriDone;
-    case 'posttest': return state.p2RicosreStep >= 6;
-    case 'profil': return true;
-    default: return false;
+    case 'home':
+    case 'petunjuk':
+    case 'absensi':
+      return true;
+
+    case 'pretest':
+      return !!state.siswa;
+
+    case 'p1-materi':
+      return state.pretestDone && pertemuanAktif === '1';
+
+    case 'p1-ricosre':
+      return state.p1MateriDone && pertemuanAktif === '1';
+
+    // Materi Pertemuan 2 dibuka langsung jika siswa memilih Pertemuan 2.
+    // Kalau siswa memilih Pertemuan 1, Materi 2 tetap baru terbuka setelah RICOSRE 1 selesai.
+    case 'p2-materi':
+      return !!state.siswa && (pertemuanAktif === '2' || state.p1RicosreStep >= 6);
+
+    case 'p2-ricosre':
+      return state.p2MateriDone;
+
+    case 'posttest':
+      return state.p2RicosreStep >= 6;
+
+    case 'profil':
+      return true;
+
+    default:
+      return false;
   }
 }
 
@@ -744,6 +766,7 @@ function renderQuiz(type) {
 async function afterPretest(score) {
   state.pretestDone = true; state.pretestScore = score;
   buildNav(); updateHomeCards();
+
   if(state.siswa) {
     const s = state.siswa;
     const pct = Math.round(score / PRETEST_Q.length * 100);
@@ -759,7 +782,13 @@ async function afterPretest(score) {
       timestamp: getTimestamp()
     });
   }
-  goPage('p1-materi');
+
+  // Arahkan otomatis sesuai pertemuan yang dipilih saat absensi.
+  if(state.siswa?.pertemuan === '2') {
+    goPage('p2-materi');
+  } else {
+    goPage('p1-materi');
+  }
 }
 
 async function afterPosttest(score) {
