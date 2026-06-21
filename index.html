@@ -217,12 +217,80 @@ nav {
 .info-card h4 { font-size:0.92rem; font-weight:700; color:var(--teal); margin-bottom:0.5rem; }
 .info-card p { font-size:0.85rem; color:var(--text-muted); line-height:1.6; }
 
+/* ── CP/TP PAGE STYLES ── */
+.cp-hero {
+  background: linear-gradient(135deg, rgba(15,155,142,0.08) 0%, rgba(245,158,11,0.06) 100%);
+  border: 1px solid rgba(15,155,142,0.2);
+  border-radius: 20px;
+  padding: 1.75rem;
+  margin-bottom: 1.25rem;
+  position: relative;
+  overflow: hidden;
+}
+.cp-hero::before {
+  content: '⚗️';
+  position: absolute;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 5rem;
+  opacity: 0.08;
+  pointer-events: none;
+}
+.cp-hero h3 { font-family:'Playfair Display',serif; font-size:1.1rem; color:var(--teal); margin-bottom:0.6rem; }
+.cp-hero p { font-size:0.88rem; color:var(--text-muted); line-height:1.8; }
+
+.tp-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:0.75rem; margin-top:1rem; }
+.tp-item {
+  background: white;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  padding: 1rem 1.25rem;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.tp-item:hover { border-color: rgba(15,155,142,0.35); box-shadow: 0 4px 16px rgba(15,155,142,0.1); }
+.tp-num {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--teal); color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.78rem; font-weight: 800; flex-shrink: 0;
+  font-family: 'DM Mono', monospace;
+}
+.tp-item p { font-size: 0.85rem; color: var(--text); line-height: 1.6; padding-top: 0.15rem; }
+
+.cp-divider {
+  display: flex; align-items: center; gap: 1rem;
+  margin: 1.5rem 0 1rem;
+}
+.cp-divider-line { flex: 1; height: 1px; background: var(--border); }
+.cp-divider-label {
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--teal);
+  background: rgba(15,155,142,0.08);
+  padding: 0.25rem 0.75rem; border-radius: 20px;
+  border: 1px solid rgba(15,155,142,0.2);
+}
+
+/* ── TOAST NOTIF ── */
+.toast {
+  position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(80px);
+  background: #1a2e2c; color: white; padding: 0.75rem 1.5rem;
+  border-radius: 30px; font-size: 0.88rem; font-weight: 500;
+  z-index: 9999; transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25); white-space: nowrap;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
 /* MOBILE */
 @media(max-width:640px) {
   nav { padding:0 1rem; }
   .nav-steps { display:none; }
   .page { padding:68px 1rem 2rem; }
   .action-grid { grid-template-columns:1fr 1fr; }
+  .tp-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -233,6 +301,9 @@ nav {
   <div class="nav-logo">Koloid<span>Lab</span></div>
   <div class="nav-steps" id="navSteps"></div>
 </nav>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
 
 <div class="page active" id="page-home">
   <div class="hero-section">
@@ -252,6 +323,7 @@ nav {
   </div>
 </div>
 
+<!-- ══ ABSENSI ══ -->
 <div class="page" id="page-absensi">
   <div class="page-header">
     <div class="page-badge">📋 Langkah Pertama</div>
@@ -294,11 +366,108 @@ nav {
       <button class="btn btn-primary" onclick="simpanAbsensi()">💾 Simpan Absensi</button>
     </div>
     <div class="btn-row" id="absensiNext" style="display:none;">
-      <button class="btn btn-primary" onclick="goPage('pretest')">📝 Lanjut ke Pretest →</button>
+      <button class="btn btn-primary" onclick="goPage('cp-tp')">🎯 Lanjut ke Capaian & Tujuan →</button>
     </div>
   </div>
 </div>
 
+<!-- ══ CAPAIAN & TUJUAN PEMBELAJARAN (NEW) ══ -->
+<div class="page" id="page-cp-tp">
+  <div class="page-header">
+    <div class="page-badge">🎯 Peta Belajar</div>
+    <h2 class="page-title">Capaian & Tujuan <em>Pembelajaran</em></h2>
+    <p class="page-sub">Sebelum mulai, pahami dulu apa yang akan kamu capai dan kuasai setelah mengikuti pembelajaran ini.</p>
+  </div>
+
+  <!-- Capaian Pembelajaran -->
+  <div class="cp-hero">
+    <h3>📋 Capaian Pembelajaran</h3>
+    <p>
+      Peserta didik mampu <strong>mengamati, menyelidiki, dan menjelaskan fenomena sehari-hari</strong> sesuai kaidah kerja ilmiah dalam menjelaskan konsep kimia dalam keseharian; menerapkan operasi matematika dalam perhitungan kimia; mempelajari sifat, struktur, dan interaksi partikel dalam membentuk berbagai senyawa termasuk <strong>pengolahan dan penerapannya dalam keseharian</strong>; memahami dan menjelaskan aspek energi, laju, dan kesetimbangan reaksi kimia; menggunakan konsep asam-basa dalam keseharian; menggunakan transformasi energi kimia dalam keseharian termasuk termokimia dan elektrokimia; memahami kimia organik termasuk penerapannya dalam keseharian.
+    </p>
+  </div>
+
+  <!-- Divider -->
+  <div class="cp-divider">
+    <div class="cp-divider-line"></div>
+    <div class="cp-divider-label">🎯 Tujuan Pembelajaran</div>
+    <div class="cp-divider-line"></div>
+  </div>
+
+  <div class="card" style="padding-bottom:1.25rem;">
+    <h3>Setelah pembelajaran ini, kamu mampu…</h3>
+    <div class="tp-grid">
+      <div class="tp-item">
+        <div class="tp-num">1</div>
+        <p>Menjelaskan fenomena koloid berdasarkan wacana kontekstual dari lingkungan sekitar.</p>
+      </div>
+      <div class="tp-item">
+        <div class="tp-num">2</div>
+        <p>Mengklasifikasikan jenis-jenis koloid secara ilmiah berdasarkan fase terdispersi dan medium pendispersinya.</p>
+      </div>
+      <div class="tp-item">
+        <div class="tp-num">3</div>
+        <p>Menganalisis perbedaan sistem dispersi (larutan, koloid, suspensi) berdasarkan bukti ilmiah.</p>
+      </div>
+      <div class="tp-item">
+        <div class="tp-num">4</div>
+        <p>Menjelaskan sifat-sifat koloid dan proses pembuatan koloid dengan tepat.</p>
+      </div>
+      <div class="tp-item">
+        <div class="tp-num">5</div>
+        <p>Menafsirkan data terkait penjernihan air berbasis konsep koloid secara kritis.</p>
+      </div>
+      <div class="tp-item">
+        <div class="tp-num">6</div>
+        <p>Mengevaluasi dan mengambil keputusan ilmiah terkait peranan koloid dalam kehidupan sehari-hari.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Info singkat RICOSRE -->
+  <div class="card" style="background: linear-gradient(135deg, rgba(15,155,142,0.05), rgba(245,158,11,0.04));">
+    <h3>🧪 Apa itu Model RICOSRE?</h3>
+    <p style="margin-bottom:1rem;">Pembelajaran ini menggunakan model <strong>RICOSRE</strong> — sebuah pendekatan saintifik berbasis literasi sains dengan 6 tahap terstruktur:</p>
+    <div style="display:flex; flex-wrap:wrap; gap:0.5rem;">
+      <span style="background:var(--teal);color:white;padding:0.3rem 0.75rem;border-radius:20px;font-size:0.78rem;font-weight:700;">📖 R — Reading</span>
+      <span style="background:var(--teal);color:white;padding:0.3rem 0.75rem;border-radius:20px;font-size:0.78rem;font-weight:700;">🔍 I — Identifying</span>
+      <span style="background:var(--teal);color:white;padding:0.3rem 0.75rem;border-radius:20px;font-size:0.78rem;font-weight:700;">🧠 C — Constructing</span>
+      <span style="background:var(--teal);color:white;padding:0.3rem 0.75rem;border-radius:20px;font-size:0.78rem;font-weight:700;">⚗️ O — Solving</span>
+      <span style="background:var(--teal);color:white;padding:0.3rem 0.75rem;border-radius:20px;font-size:0.78rem;font-weight:700;">🔄 S — Reviewing</span>
+      <span style="background:var(--teal);color:white;padding:0.3rem 0.75rem;border-radius:20px;font-size:0.78rem;font-weight:700;">🌍 E — Extending</span>
+    </div>
+  </div>
+
+  <div class="btn-row" style="justify-content:space-between; margin-top:0.5rem;">
+    <button class="btn btn-secondary btn-sm" onclick="goPage('absensi')">← Kembali</button>
+    <button class="btn btn-primary" onclick="goPage('pretest')">📝 Lanjut ke Pretest →</button>
+  </div>
+</div>
+
+<!-- ══ PETUNJUK ══ -->
+<div class="page" id="page-petunjuk">
+  <div class="page-header">
+    <div class="page-badge">📌 Panduan</div>
+    <h2 class="page-title">Petunjuk <em>Penggunaan</em></h2>
+  </div>
+  <div class="card">
+    <h3>🗺️ Navigasi Website</h3>
+    <div class="sifat-list" style="margin-top:0.75rem;">
+      <div class="sifat-item"><div class="sifat-icon">1️⃣</div><div><h5>Mulai dari Absensi</h5><p>Isi absensi terlebih dahulu sebelum mengakses materi. Data absensi diperlukan untuk rekap kehadiran.</p></div></div>
+      <div class="sifat-item"><div class="sifat-icon">2️⃣</div><div><h5>Baca Capaian & Tujuan</h5><p>Pahami capaian pembelajaran dan tujuan pembelajaran sebelum masuk ke materi agar kamu tahu apa yang akan dicapai.</p></div></div>
+      <div class="sifat-item"><div class="sifat-icon">3️⃣</div><div><h5>Kerjakan Pretest</h5><p>Setelah memahami tujuan, kerjakan soal pretest untuk mengukur pengetahuan awalmu. Jawab dengan jujur.</p></div></div>
+      <div class="sifat-item"><div class="sifat-icon">4️⃣</div><div><h5>Ikuti Materi & RICOSRE</h5><p>Pelajari materi per pertemuan secara berurutan. Selesaikan setiap tahap RICOSRE sebelum lanjut ke tahap berikutnya.</p></div></div>
+      <div class="sifat-item"><div class="sifat-icon">5️⃣</div><div><h5>Kerjakan Posttest</h5><p>Setelah selesai kedua pertemuan, kerjakan posttest untuk mengukur peningkatan pemahamanmu.</p></div></div>
+      <div class="sifat-item"><div class="sifat-icon">💾</div><div><h5>Data Tersimpan Otomatis</h5><p>Semua jawabanmu tersimpan otomatis di browser ini. Data tidak akan hilang meski halaman di-refresh.</p></div></div>
+      <div class="sifat-item"><div class="sifat-icon">🔒</div><div><h5>Fitur Terkunci</h5><p>Halaman yang terkunci (🔒) hanya bisa diakses setelah menyelesaikan tahap sebelumnya secara berurutan.</p></div></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="goPage('absensi')">📋 Mulai Absensi →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PRETEST ══ -->
 <div class="page" id="page-pretest">
   <div class="page-header">
     <div class="page-badge">📝 Sebelum Belajar</div>
@@ -310,26 +479,7 @@ nav {
   </div>
 </div>
 
-<div class="page" id="page-petunjuk">
-  <div class="page-header">
-    <div class="page-badge">📌 Panduan</div>
-    <h2 class="page-title">Petunjuk <em>Penggunaan</em></h2>
-  </div>
-  <div class="card">
-    <h3>🗺️ Navigasi Website</h3>
-    <div class="sifat-list" style="margin-top:0.75rem;">
-      <div class="sifat-item"><div class="sifat-icon">1️⃣</div><div><h5>Mulai dari Absensi</h5><p>Isi absensi terlebih dahulu sebelum mengakses materi. Data absensi diperlukan untuk rekap kehadiran.</p></div></div>
-      <div class="sifat-item"><div class="sifat-icon">2️⃣</div><div><h5>Kerjakan Pretest</h5><p>Setelah absensi, kerjakan soal pretest untuk mengukur pengetahuan awalmu. Jawab dengan jujur.</p></div></div>
-      <div class="sifat-item"><div class="sifat-icon">3️⃣</div><div><h5>Ikuti Materi & RICOSRE</h5><p>Pelajari materi per pertemuan secara berurutan. Selesaikan setiap tahap RICOSRE sebelum lanjut ke tahap berikutnya.</p></div></div>
-      <div class="sifat-item"><div class="sifat-icon">4️⃣</div><div><h5>Kerjakan Posttest</h5><p>Setelah selesai kedua pertemuan, kerjakan posttest untuk mengukur peningkatan pemahamanmu.</p></div></div>
-      <div class="sifat-item"><div class="sifat-icon">🔒</div><div><h5>Fitur Terkunci</h5><p>Halaman yang terkunci (🔒) hanya bisa diakses setelah menyelesaikan tahap sebelumnya secara berurutan.</p></div></div>
-    </div>
-    <div class="btn-row">
-      <button class="btn btn-primary" onclick="goPage('absensi')">📋 Mulai Absensi →</button>
-    </div>
-  </div>
-</div>
-
+<!-- ══ MATERI P1 ══ -->
 <div class="page" id="page-p1-materi">
   <div class="page-header">
     <div class="page-badge">📚 Pertemuan 1</div>
@@ -407,19 +557,19 @@ nav {
   </div>
 </div>
 
+<!-- ══ RICOSRE P1 ══ -->
 <div class="page" id="page-p1-ricosre">
   <div class="page-header">
     <div class="page-badge">🧪 RICOSRE — Pertemuan 1</div>
     <h2 class="page-title">Sistem Koloid di <em>Sungai Mahakam</em></h2>
     <p class="page-sub">Ikuti 6 tahap RICOSRE secara berurutan. Selesaikan setiap tahap untuk membuka tahap berikutnya.</p>
   </div>
-
   <div class="step-indicator" id="p1StepIndicator"></div>
-
   <div id="p1-step-content"></div>
   <div class="btn-row" style="margin-top:1.5rem;" id="p1StepNav"></div>
 </div>
 
+<!-- ══ MATERI P2 ══ -->
 <div class="page" id="page-p2-materi">
   <div class="page-header">
     <div class="page-badge">📚 Pertemuan 2</div>
@@ -468,18 +618,19 @@ nav {
   </div>
 </div>
 
+<!-- ══ RICOSRE P2 ══ -->
 <div class="page" id="page-p2-ricosre">
   <div class="page-header">
     <div class="page-badge">🧪 RICOSRE — Pertemuan 2</div>
     <h2 class="page-title">Penjernihan Air <em>Berbasis Koloid</em></h2>
     <p class="page-sub">Terapkan 6 tahap RICOSRE pada konteks penjernihan air menggunakan konsep koloid.</p>
   </div>
-
   <div class="step-indicator" id="p2StepIndicator"></div>
   <div id="p2-step-content"></div>
   <div class="btn-row" style="margin-top:1.5rem;" id="p2StepNav"></div>
 </div>
 
+<!-- ══ POSTTEST ══ -->
 <div class="page" id="page-posttest">
   <div class="page-header">
     <div class="page-badge">🏁 Evaluasi Akhir</div>
@@ -491,6 +642,7 @@ nav {
   </div>
 </div>
 
+<!-- ══ PROFIL ══ -->
 <div class="page" id="page-profil">
   <div class="page-header">
     <div class="page-badge">👤 Profil</div>
@@ -501,7 +653,55 @@ nav {
   </div>
 </div>
 
-</div><script>
+</div><!-- #app -->
+
+<script>
+// ═══════════════════════════════════════════
+//  LOCALSTORAGE KEYS
+// ═══════════════════════════════════════════
+const LS_KEY = 'koloidlab_state_v2';
+
+function saveState() {
+  try {
+    const toSave = {
+      siswa: state.siswa,
+      pretestDone: state.pretestDone,
+      pretestScore: state.pretestScore,
+      pretestAnswers: state.pretestAnswers,
+      p1MateriDone: state.p1MateriDone,
+      p1RicosreStep: state.p1RicosreStep,
+      p1RicoAnswers: state.p1RicoAnswers,
+      p2MateriDone: state.p2MateriDone,
+      p2RicosreStep: state.p2RicosreStep,
+      p2RicoAnswers: state.p2RicoAnswers,
+      posttestDone: state.posttestDone,
+      posttestScore: state.posttestScore,
+      posttestAnswers: state.posttestAnswers,
+      currentPage: state.currentPage,
+    };
+    localStorage.setItem(LS_KEY, JSON.stringify(toSave));
+  } catch(e) { console.warn('localStorage tidak tersedia:', e); }
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if(!raw) return;
+    const saved = JSON.parse(raw);
+    Object.assign(state, saved);
+  } catch(e) { console.warn('Gagal memuat state:', e); }
+}
+
+// ═══════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════
+function showToast(msg, duration=2500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), duration);
+}
+
 // ═══════════════════════════════════════════
 //  STATE
 // ═══════════════════════════════════════════
@@ -522,12 +722,16 @@ const state = {
   currentPage: 'home',
 };
 
+// Load state from localStorage on startup
+loadState();
+
 // ═══════════════════════════════════════════
 //  NAV CONFIG
 // ═══════════════════════════════════════════
 const NAV_ITEMS = [
   { id:'home',      label:'🏠 Beranda' },
   { id:'absensi',   label:'📋 Absensi' },
+  { id:'cp-tp',     label:'🎯 CP/TP' },
   { id:'petunjuk',  label:'📌 Petunjuk' },
   { id:'pretest',   label:'📝 Pretest' },
   { id:'p1-materi', label:'📚 Materi 1' },
@@ -547,6 +751,9 @@ function isUnlocked(id) {
     case 'absensi':
       return true;
 
+    case 'cp-tp':
+      return !!state.siswa;
+
     case 'pretest':
       return !!state.siswa;
 
@@ -556,10 +763,8 @@ function isUnlocked(id) {
     case 'p1-ricosre':
       return state.p1MateriDone && pertemuanAktif === '1';
 
-    // Materi Pertemuan 2 dibuka langsung jika siswa memilih Pertemuan 2.
-    // Kalau siswa memilih Pertemuan 1, Materi 2 tetap baru terbuka setelah RICOSRE 1 selesai.
     case 'p2-materi':
-      return !!state.siswa && (pertemuanAktif === '2' || state.p1RicosreStep >= 6);
+      return state.pretestDone;
 
     case 'p2-ricosre':
       return state.p2MateriDone;
@@ -591,12 +796,14 @@ function buildNav() {
 
 function goPage(id) {
   if(!isUnlocked(id)) {
-    alert('🔒 Selesaikan tahap sebelumnya terlebih dahulu!');
+    showToast('🔒 Selesaikan tahap sebelumnya terlebih dahulu!');
     return;
   }
+  markMateriDone(id);
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
   state.currentPage = id;
+  saveState();
   buildNav();
   updateHomeCards();
   window.scrollTo(0, 0);
@@ -606,11 +813,19 @@ function goPage(id) {
   if(id === 'p1-ricosre') renderRicosre(1);
   if(id === 'p2-ricosre') renderRicosre(2);
   if(id === 'profil') renderProfil();
+  if(id === 'pretest' && state.pretestDone) renderQuizResult('pretest');
+  if(id === 'posttest' && state.posttestDone) renderQuizResult('posttest');
+}
+
+function markMateriDone(id) {
+  if(id === 'p1-materi') state.p1MateriDone = true;
+  if(id === 'p2-materi') state.p2MateriDone = true;
 }
 
 function updateHomeCards() {
   const items = [
     { id:'absensi', icon:'📋', label:'Absensi', desc:'Daftar kehadiranmu' },
+    { id:'cp-tp', icon:'🎯', label:'CP & TP', desc:'Capaian & tujuan belajar' },
     { id:'petunjuk', icon:'📌', label:'Petunjuk', desc:'Panduan penggunaan' },
     { id:'pretest', icon:'📝', label:'Pretest', desc:'Tes pengetahuan awal' },
     { id:'p1-materi', icon:'📚', label:'Materi 1', desc:'Sistem & sifat koloid' },
@@ -621,7 +836,7 @@ function updateHomeCards() {
   ];
   document.getElementById('homeCards').innerHTML = items.map(it => {
     const un = isUnlocked(it.id);
-    return `<div class="action-card ${un ? '' : 'locked-card'}" onclick="${un ? `goPage('${it.id}')` : 'alert(\"🔒 Selesaikan tahap sebelumnya!\")'}" >
+    return `<div class="action-card ${un ? '' : 'locked-card'}" onclick="${un ? `goPage('${it.id}')` : 'showToast(\"🔒 Selesaikan tahap sebelumnya!\")'}" >
       <div class="ac-icon">${it.icon}${!un ? ' 🔒' : ''}</div>
       <h4>${it.label}</h4>
       <p>${it.desc}</p>
@@ -653,13 +868,14 @@ async function simpanAbsensi() {
   const no = document.getElementById('siswaNo').value.trim();
   const kelas = document.getElementById('siswaKelas').value;
   const pertemuan = document.getElementById('siswaPertemuan').value;
-  if(!name || !no || !kelas || !pertemuan) { alert('❗ Lengkapi semua data absensi!'); return; }
+  if(!name || !no || !kelas || !pertemuan) { showToast('❗ Lengkapi semua data absensi!'); return; }
 
   const btn = document.querySelector('#absensiBtn .btn');
   btn.innerHTML = '⏳ Menyimpan...';
   btn.disabled = true;
 
   state.siswa = { name, no, kelas, pertemuan };
+  saveState();
   await sendToSheets({ type: 'absensi', name, no, kelas, pertemuan, timestamp: getTimestamp() });
 
   document.getElementById('absensiForm').style.display = 'none';
@@ -667,7 +883,25 @@ async function simpanAbsensi() {
   document.getElementById('absensiSaved').style.display = 'block';
   document.getElementById('absensiNext').style.display = 'flex';
   document.getElementById('absensiInfo').textContent = `${name} · No. ${no} · ${kelas} · Pertemuan ${pertemuan}`;
+  showToast('✅ Absensi berhasil disimpan!');
   buildNav(); updateHomeCards();
+}
+
+// Restore absensi UI if data already exists
+function restoreAbsensiUI() {
+  if(!state.siswa) return;
+  const s = state.siswa;
+  const form = document.getElementById('absensiForm');
+  const btn = document.getElementById('absensiBtn');
+  const saved = document.getElementById('absensiSaved');
+  const next = document.getElementById('absensiNext');
+  const info = document.getElementById('absensiInfo');
+
+  if(form) form.style.display = 'none';
+  if(btn) btn.style.display = 'none';
+  if(saved) saved.style.display = 'block';
+  if(next) next.style.display = 'flex';
+  if(info) info.textContent = `${s.name} · No. ${s.no} · ${s.kelas} · Pertemuan ${s.pertemuan}`;
 }
 
 // ═══════════════════════════════════════════
@@ -699,18 +933,41 @@ const POSTTEST_Q = [
   { q:'Jika terjadi tumpahan minyak mentah di sungai yang membentuk koloid dan sulit dibersihkan, keputusan apa yang paling tepat berdasarkan sifat adsorpsi koloid?', opts:['Menyiram tumpahan dengan air sabun agar minyak larut dan hilang ke dasar sungai.','Menaburkan serbuk karbon aktif atau kulit pisang yang telah diolah (bio-adsorben) untuk menyerap molekul minyak di permukaannya sehingga mudah diangkat.','Membiarkan matahari menguapkan seluruh minyak hingga sungai kembali bersih.','Menambahkan zat asam agar minyak menggumpal dan tenggelam merusak dasar sungai.','Menyaring air sungai menggunakan saringan pasir dari pinggir sungai'], ans:1, exp:'Bahan bio-adsorben atau karbon aktif dapat secara luas menyerap (mengadsorpsi) molekul minyak pada permukaannya, sehingga minyak lebih mudah untuk ditangani dan diangkat dari air.' },
 ];
 
+function renderQuizResult(type) {
+  const score = type === 'pretest' ? state.pretestScore : state.posttestScore;
+  const data = type === 'pretest' ? PRETEST_Q : POSTTEST_Q;
+  const containerId = type === 'pretest' ? 'pretestContainer' : 'posttestContainer';
+  const pct = Math.round(score/data.length*100);
+  const emoji = pct>=80?'🏆':pct>=60?'🎉':pct>=40?'📚':'💪';
+  const msg = pct>=80?'Luar biasa! Pemahaman koloidmu sangat baik!':pct>=60?'Bagus! Terus tingkatkan pemahamanmu.':pct>=40?'Cukup baik. Review materi yang belum dipahami.':'Jangan menyerah! Pelajari kembali materinya.';
+  const c = document.getElementById(containerId);
+  if(!c) return;
+  c.innerHTML = `<div class="quiz-result">
+    <div class="result-emoji">${emoji}</div>
+    <div class="result-title">${type==='pretest'?'Pretest':'Posttest'} Selesai!</div>
+    <div class="result-big">${score}/${data.length}</div>
+    <div class="result-pct">${pct}% Benar · ${msg}</div>
+    <div style="margin-top:0.5rem;"><span class="badge-done">✅ Sudah dikerjakan</span></div>
+    <div class="btn-row" style="justify-content:center; margin-top:1.25rem;">
+      ${type==='pretest' ? `<button class="btn btn-primary" onclick="goPage('${state.siswa?.pertemuan==='2'?'p2-materi':'p1-materi'}')">Lanjut ke Materi →</button>` :
+        `<button class="btn btn-primary" onclick="goPage('profil')">Lihat Profil & Rekap →</button>`}
+    </div>
+  </div>`;
+}
+
 function renderQuiz(type) {
   const data = type === 'pretest' ? PRETEST_Q : POSTTEST_Q;
   const containerId = type === 'pretest' ? 'pretestContainer' : 'posttestContainer';
   let cur = 0, score = 0, answered = false;
+  const answers = type === 'pretest' ? state.pretestAnswers : state.posttestAnswers;
 
   function render() {
     const c = document.getElementById(containerId);
+    if(!c) return;
     if(cur >= data.length) {
       const pct = Math.round(score/data.length*100);
       const emoji = pct>=80?'🏆':pct>=60?'🎉':pct>=40?'📚':'💪';
       const msg = pct>=80?'Luar biasa! Pemahaman koloidmu sangat baik!':pct>=60?'Bagus! Terus tingkatkan pemahamanmu.':pct>=40?'Cukup baik. Review materi yang belum dipahami.':'Jangan menyerah! Pelajari kembali materinya.';
-      
       c.innerHTML = `<div class="quiz-result">
         <div class="result-emoji">${emoji}</div>
         <div class="result-title">${type==='pretest'?'Pretest':'Posttest'} Selesai!</div>
@@ -734,7 +991,7 @@ function renderQuiz(type) {
       <div class="quiz-question">${q.q}</div>
       <div class="quiz-options">
         ${q.opts.map((o,i)=>`<button class="quiz-opt" id="qo${i}" onclick="selectQ(${i},${q.ans},'${containerId}','${q.exp.replace(/'/g,"\\'")}')">
-          <span class="opt-letter">${'ABCD'[i] || 'E'}</span>${o}
+          <span class="opt-letter">${'ABCDE'[i]}</span>${o}
         </button>`).join('')}
       </div>
       <div class="quiz-feedback" id="qfb"></div>
@@ -746,12 +1003,8 @@ function renderQuiz(type) {
     window.selectQ = function(i, ans, cid, exp) {
       if(answered) return; answered=true;
       const opts = document.querySelectorAll('.quiz-opt');
-      
-      // Simpan HANYA huruf jawabannya saja (A/B/C/D/E)
-      const choosenLetter = 'ABCDE'[i] || 'E';
-      if (type === 'pretest') state.pretestAnswers[cur] = choosenLetter;
-      else state.posttestAnswers[cur] = choosenLetter;
-
+      const choosenLetter = 'ABCDE'[i];
+      answers[cur] = choosenLetter;
       opts.forEach(o=>o.disabled=true);
       const fb = document.getElementById('qfb');
       if(i===ans) { opts[i].classList.add('correct'); score++; fb.className='quiz-feedback ok show'; fb.innerHTML=`✅ ${exp}`; }
@@ -765,25 +1018,22 @@ function renderQuiz(type) {
 
 async function afterPretest(score) {
   state.pretestDone = true; state.pretestScore = score;
+  saveState();
   buildNav(); updateHomeCards();
 
   if(state.siswa) {
     const s = state.siswa;
     const pct = Math.round(score / PRETEST_Q.length * 100);
-    
-    // Gabungkan array huruf menjadi string "No 1 A, No 2 B, No 3 C, ..."
     const formatJawaban = state.pretestAnswers.map((ans, idx) => `No ${idx + 1} ${ans}`).join(', ');
-
     await sendToSheets({
       type: 'pretest',
       name: s.name, no: s.no, kelas: s.kelas,
       skor: score, total: PRETEST_Q.length, persen: pct,
-      jawaban_detail: formatJawaban, 
+      jawaban_detail: formatJawaban,
       timestamp: getTimestamp()
     });
   }
 
-  // Arahkan otomatis sesuai pertemuan yang dipilih saat absensi.
   if(state.siswa?.pertemuan === '2') {
     goPage('p2-materi');
   } else {
@@ -793,21 +1043,19 @@ async function afterPretest(score) {
 
 async function afterPosttest(score) {
   state.posttestDone = true; state.posttestScore = score;
+  saveState();
   buildNav(); updateHomeCards();
-  
+
   if(state.siswa) {
     const s = state.siswa;
     const pct = Math.round(score / POSTTEST_Q.length * 100);
-    
-    // Gabungkan array huruf menjadi string "No 1 A, No 2 B, No 3 C, ..."
     const formatJawaban = state.posttestAnswers.map((ans, idx) => `No ${idx + 1} ${ans}`).join(', ');
-
     await sendToSheets({
       type: 'posttest',
       name: s.name, no: s.no, kelas: s.kelas,
       skor: score, total: POSTTEST_Q.length, persen: pct,
       skorPretest: state.pretestScore, persen_pretest: Math.round(state.pretestScore/PRETEST_Q.length*100),
-      jawaban_detail: formatJawaban, 
+      jawaban_detail: formatJawaban,
       timestamp: getTimestamp()
     });
   }
@@ -822,81 +1070,21 @@ const RICOSRE_LABELS = ['Reading','Identifying the Problem','Constructing the So
 const RICOSRE_ICONS = ['📖','🔍','🧠','⚗️','🔄','🌍'];
 
 const P1_RICO_CONTENT = [
-  {
-    title:'Reading — Membaca Wacana',
-    context:`<b>Misteri Warna Cokelat Sang Mahakam</b><br><br>Sungai Mahakam, nadi kehidupan Kalimantan Timur yang membelah Kota Samarinda, seringkali memicu pertanyaan bagi mata yang melihatnya: Mengapa airnya selalu berwarna cokelat pekat? Bagi sebagian orang, ini dianggap sekadar lumpur biasa. Namun, dari kacamata kimia lingkungan, fenomena ini adalah sebuah demonstrasi skala besar dari sistem koloid.<br><br>Air Sungai Mahakam mengandung konsentrasi Padatan Tersuspensi Total (TSS) yang sangat tinggi. Partikel-partikel ini bukan sekadar pasir kasar yang bisa tenggelam dengan cepat ke dasar sungai. Sebaliknya, sebagian besar terdiri dari partikel tanah liat (lempung), sisa humus hutan dari hulu, dan mineral silika berukuran mikroskopis (sekitar 1 hingga 100 nanometer). Karena ukurannya yang berada dalam rentang koloid, partikel-partikel ini mengalami Gerak Brown—getaran konstan akibat tumbukan molekul air—yang melawan gaya gravitasi, sehingga mereka tetap "melayang" dan tidak pernah mengendap secara alami meski arus sungai tenang.<br><br>Selain itu, stabilitas warna cokelat ini disebabkan oleh fenomena muatan listrik. Partikel koloid tanah di Mahakam cenderung bermuatan negatif. Karena memiliki muatan yang sama, partikel-partikel ini saling tolak-menolak (electrostatic repulsion) ketika berdekatan, mencegah mereka untuk bergabung menjadi gumpalan yang lebih besar. Akibatnya, air tetap keruh secara permanen.<br><br>Secara optik, partikel ini menunjukkan Efek Tyndall yang masif. Cahaya matahari yang jatuh ke permukaan sungai tidak diteruskan melainkan dihamburkan ke segala arah, memberikan penampakan visual yang tidak tembus pandang. Inilah yang menyebabkan kedalaman sungai sulit diprediksi hanya dengan pandangan mata telanjang. Fenomena ini bukan sekadar masalah estetika, melainkan tantangan teknis bagi warga Samarinda yang bergantung pada sungai ini sebagai sumber air baku.`,
-    task:'Tuliskan tiga (3) informasi ilmiah penting dari wacana tentang Sungai Mahakam di atas.',
-    hint:'Petunjuk: Identifikasi fakta sains tentang ukuran partikel, gerak partikel, dan muatan listrik.'
-  },
-  {
-    title:'Identifying the Problem — Merumuskan Masalah',
-    context:`Masyarakat sering beranggapan bahwa semua air keruh akan jernih jika didiamkan. Namun pengamatan dan pembacaan wacana menunjukkan bahwa air Mahakam tetap keruh sangat lama secara permanen. Hal ini menunjukkan adanya persoalan ilmiah yang perlu diidentifikasi.`,
-    task:'Rumuskan masalah ilmiah utama dari fenomena tersebut dalam bentuk pertanyaan ilmiah.',
-    hint:'Petunjuk: Gunakan kata tanya "Mengapa...", "Bagaimana...", atau "Apa yang menyebabkan..."'
-  },
-  {
-    title:'Constructing the Solution — Menyusun Hipotesis',
-    context:`Untuk menjelaskan fenomena stabilitas air keruh tersebut, siswa perlu membandingkan konsep ukuran partikel, sifat Gerak Brown, dan interaksi muatan elektrostatik antar partikel di dalam sungai.`,
-    task:'Susun hipotesis tentang jenis sistem dispersi pada air Sungai Mahakam dan apa yang menahan warnanya tetap cokelat. Sertakan alasan ilmiahmu!',
-    hint:'Petunjuk: Hubungkan ukuran partikel (koloid), tolak-menolak muatan listrik, dan gaya gravitasi.'
-  },
-  {
-    title:'Solving the Problem — Memecahkan Masalah',
-    context:`Berdasarkan teori koloid: larutan (<1 nm), koloid (1–100 nm), suspensi (>100 nm). Partikel berukuran koloid memiliki sifat optik dan kinetik yang khusus sehingga air Mahakam memiliki karakteristik keruh yang khas secara visual.`,
-    task:'Jelaskan secara runtut mengapa air Sungai Mahakam tidak bisa jernih dengan sendirinya, dan mengapa kita sulit memprediksi kedalaman sungai tersebut dari permukaan! Gunakan konsep Gerak Brown dan Efek Tyndall.',
-    hint:'Petunjuk: Bahas tumbukan molekuler (kinetik) dan penghamburan cahaya (optik).'
-  },
-  {
-    title:'Reviewing the Problem — Meninjau Ulang',
-    context:`Dalam literasi sains, jawaban harus konsisten dengan fenomena dan konsep teoritis. Penjelasan mengenai gaya elektrostatik juga sangat krusial dalam menahan agregasi partikel.`,
-    task:'Tinjau kembali hipotesis dan penjelasanmu pada tahap sebelumnya. Apakah sudah memasukkan argumen tentang gaya tolak-menolak elektrostatik? Jika ada kekurangan, perbaiki di sini.',
-    hint:'Petunjuk: Periksa kembali penggunaan istilah "electrostatic repulsion" dan kesesuaiannya dengan teori koloid.'
-  },
-  {
-    title:'Extending the Problem — Memperluas Masalah',
-    context:`Kondisi air seperti di Sungai Mahakam tidak hanya terjadi di sana. Di wilayah bergambut di Kalimantan, air juga seringkali berwarna gelap secara persisten akibat interaksi koloidal senyawa organik kompleks.`,
-    task:'Hubungkan konsep kestabilan partikel koloid Mahakam dengan satu fenomena di sekitarmu (misalnya susu yang tidak mengendap atau kabut asap/karhutla). Berikan penjelasan komparatif singkat!',
-    hint:'Petunjuk: Pilih satu contoh koloid lain dan jelaskan kesamaan prinsipnya dalam mempertahankan fase dispersi agar tidak terpisah.'
-  }
+  { title:'Reading — Membaca Wacana', context:`<b>Misteri Warna Cokelat Sang Mahakam</b><br><br>Sungai Mahakam, nadi kehidupan Kalimantan Timur yang membelah Kota Samarinda, seringkali memicu pertanyaan bagi mata yang melihatnya: Mengapa airnya selalu berwarna cokelat pekat? Bagi sebagian orang, ini dianggap sekadar lumpur biasa. Namun, dari kacamata kimia lingkungan, fenomena ini adalah sebuah demonstrasi skala besar dari sistem koloid.<br><br>Air Sungai Mahakam mengandung konsentrasi Padatan Tersuspensi Total (TSS) yang sangat tinggi. Partikel-partikel ini bukan sekadar pasir kasar yang bisa tenggelam dengan cepat ke dasar sungai. Sebaliknya, sebagian besar terdiri dari partikel tanah liat (lempung), sisa humus hutan dari hulu, dan mineral silika berukuran mikroskopis (sekitar 1 hingga 100 nanometer). Karena ukurannya yang berada dalam rentang koloid, partikel-partikel ini mengalami Gerak Brown—getaran konstan akibat tumbukan molekul air—yang melawan gaya gravitasi, sehingga mereka tetap "melayang" dan tidak pernah mengendap secara alami meski arus sungai tenang.<br><br>Selain itu, stabilitas warna cokelat ini disebabkan oleh fenomena muatan listrik. Partikel koloid tanah di Mahakam cenderung bermuatan negatif. Karena memiliki muatan yang sama, partikel-partikel ini saling tolak-menolak (electrostatic repulsion) ketika berdekatan, mencegah mereka untuk bergabung menjadi gumpalan yang lebih besar. Akibatnya, air tetap keruh secara permanen.<br><br>Secara optik, partikel ini menunjukkan Efek Tyndall yang masif. Cahaya matahari yang jatuh ke permukaan sungai tidak diteruskan melainkan dihamburkan ke segala arah, memberikan penampakan visual yang tidak tembus pandang. Inilah yang menyebabkan kedalaman sungai sulit diprediksi hanya dengan pandangan mata telanjang. Fenomena ini bukan sekadar masalah estetika, melainkan tantangan teknis bagi warga Samarinda yang bergantung pada sungai ini sebagai sumber air baku.`, task:'Tuliskan tiga (3) informasi ilmiah penting dari wacana tentang Sungai Mahakam di atas.', hint:'Petunjuk: Identifikasi fakta sains tentang ukuran partikel, gerak partikel, dan muatan listrik.' },
+  { title:'Identifying the Problem — Merumuskan Masalah', context:`Masyarakat sering beranggapan bahwa semua air keruh akan jernih jika didiamkan. Namun pengamatan dan pembacaan wacana menunjukkan bahwa air Mahakam tetap keruh sangat lama secara permanen. Hal ini menunjukkan adanya persoalan ilmiah yang perlu diidentifikasi.`, task:'Rumuskan masalah ilmiah utama dari fenomena tersebut dalam bentuk pertanyaan ilmiah.', hint:'Petunjuk: Gunakan kata tanya "Mengapa...", "Bagaimana...", atau "Apa yang menyebabkan..."' },
+  { title:'Constructing the Solution — Menyusun Hipotesis', context:`Untuk menjelaskan fenomena stabilitas air keruh tersebut, siswa perlu membandingkan konsep ukuran partikel, sifat Gerak Brown, dan interaksi muatan elektrostatik antar partikel di dalam sungai.`, task:'Susun hipotesis tentang jenis sistem dispersi pada air Sungai Mahakam dan apa yang menahan warnanya tetap cokelat. Sertakan alasan ilmiahmu!', hint:'Petunjuk: Hubungkan ukuran partikel (koloid), tolak-menolak muatan listrik, dan gaya gravitasi.' },
+  { title:'Solving the Problem — Memecahkan Masalah', context:`Berdasarkan teori koloid: larutan (<1 nm), koloid (1–100 nm), suspensi (>100 nm). Partikel berukuran koloid memiliki sifat optik dan kinetik yang khusus sehingga air Mahakam memiliki karakteristik keruh yang khas secara visual.`, task:'Jelaskan secara runtut mengapa air Sungai Mahakam tidak bisa jernih dengan sendirinya, dan mengapa kita sulit memprediksi kedalaman sungai tersebut dari permukaan! Gunakan konsep Gerak Brown dan Efek Tyndall.', hint:'Petunjuk: Bahas tumbukan molekuler (kinetik) dan penghamburan cahaya (optik).' },
+  { title:'Reviewing the Problem — Meninjau Ulang', context:`Dalam literasi sains, jawaban harus konsisten dengan fenomena dan konsep teoritis. Penjelasan mengenai gaya elektrostatik juga sangat krusial dalam menahan agregasi partikel.`, task:'Tinjau kembali hipotesis dan penjelasanmu pada tahap sebelumnya. Apakah sudah memasukkan argumen tentang gaya tolak-menolak elektrostatik? Jika ada kekurangan, perbaiki di sini.', hint:'Petunjuk: Periksa kembali penggunaan istilah "electrostatic repulsion" dan kesesuaiannya dengan teori koloid.' },
+  { title:'Extending the Problem — Memperluas Masalah', context:`Kondisi air seperti di Sungai Mahakam tidak hanya terjadi di sana. Di wilayah bergambut di Kalimantan, air juga seringkali berwarna gelap secara persisten akibat interaksi koloidal senyawa organik kompleks.`, task:'Hubungkan konsep kestabilan partikel koloid Mahakam dengan satu fenomena di sekitarmu (misalnya susu yang tidak mengendap atau kabut asap/karhutla). Berikan penjelasan komparatif singkat!', hint:'Petunjuk: Pilih satu contoh koloid lain dan jelaskan kesamaan prinsipnya dalam mempertahankan fase dispersi agar tidak terpisah.' },
 ];
 
 const P2_RICO_CONTENT = [
-  {
-    title:'Reading — Membaca Wacana',
-    context:`<b>Rahasia Tawas dalam Penjernihan Air di Kota Tepian</b><br><br>Air Sungai Mahakam merupakan sistem koloid yang sangat stabil. Stabilitas ini disebabkan oleh partikel lumpur mikroskopis yang memiliki muatan listrik sejenis (negatif), sehingga mereka selalu saling tolak-menolak dan enggan mengendap. Untuk mengatasi hal ini, masyarakat dan PDAM Samarinda menggunakan Tawas Al₂(SO₄)₃ sebagai agen penjernih utama.<br><br>Proses penjernihan diawali dengan mekanisme Koagulasi. Saat tawas dilarutkan ke dalam air sungai, ia melepaskan kation multivalen Al³⁺. Ion positif ini bertindak sebagai penetral; mereka akan mengadsorpsi atau menempel pada permukaan partikel lumpur yang bermuatan negatif. Ketika muatan listrik partikel telah netral, gaya tolak-menolak antar partikel hilang, memungkinkan mereka untuk saling bertumbukan dan berikatan.<br><br>Langkah selanjutnya adalah Flokulasi. Partikel-partikel yang telah netral tadi mulai bergabung membentuk gumpalan yang lebih besar dan kasar yang disebut flok. Seiring dengan bertambahnya ukuran flok, massa jenisnya menjadi lebih besar daripada air, sehingga gaya gravitasi mampu menarik gumpalan tersebut jatuh ke dasar wadah (sedimentasi).<br><br>Namun, penggunaan tawas di wilayah Samarinda memerlukan ketelitian dosis. Secara kimiawi, pelarutan tawas melepaskan ion hidrogen (H⁺) yang dapat meningkatkan keasaman air (menurunkan pH). Jika dosis yang diberikan berlebihan, tidak hanya air yang menjadi asam, tetapi dapat terjadi fenomena re-stabilisasi. Dalam kondisi ini, partikel lumpur justru akan bermuatan positif kembali karena tertutup lapisan ion Al³⁺ yang berlebih, menyebabkan partikel kembali tolak-menolak dan air tetap keruh. Oleh karena itu, penentuan dosis optimal melalui uji laboratorium sangat penting untuk mendapatkan air bersih yang aman bagi warga Kota Samarinda.`,
-    task:'Tuliskan tiga (3) informasi ilmiah penting dari wacana tentang proses penjernihan air (penggunaan tawas) di atas.',
-    hint:'Petunjuk: Fokus pada ion yang dilepaskan, tahapan koagulasi-flokulasi, dan masalah dosis berlebih.'
-  },
-  {
-    title:'Identifying the Problem — Merumuskan Masalah',
-    context:`Penambahan tawas dalam air keruh tidak selamanya langsung membuahkan hasil jernih yang baik. Seperti yang disebutkan dalam wacana, ada batasan dosis agar fenomena "re-stabilisasi" tidak terjadi.`,
-    task:'Rumuskan masalah ilmiah terkait dosis tawas dan tingkat keasaman (pH) air dalam bentuk pertanyaan.',
-    hint:'Petunjuk: Pertimbangkan hubungan antara konsentrasi bahan kimia dengan stabilitas koloid serta kualitas pH akhir.'
-  },
-  {
-    title:'Constructing the Solution — Menyusun Hipotesis',
-    context:`Koagulasi terjadi optimal ketika muatan partikel koloid tepat dinetralkan (isoelectric point). Jika ion Al³⁺ dari tawas terlalu sedikit, koagulasi tidak terjadi. Jika terlalu banyak, partikel akan diselimuti muatan positif dan kembali tolak-menolak.`,
-    task:'Susun hipotesis tentang bagaimana perbedaan dosis tawas (kurang, pas, berlebih) akan memengaruhi kekeruhan akhir dan pH air. Sertakan alasan ilmiahmu!',
-    hint:'Petunjuk: Kaitkan hipotesismu dengan prinsip adsorpsi muatan berlawanan dan pelepasan ion H⁺.'
-  },
-  {
-    title:'Solving the Problem — Memecahkan Masalah',
-    context:`Di lab PDAM, teknisi mencatat: Tabung A (tawas 10mg/L) = air lambat jernih, pH 7.1. Tabung B (tawas 30mg/L) = air sangat jernih, flok besar, pH 6.8. Tabung C (tawas 80mg/L) = air kembali agak keruh (tidak membentuk flok besar), pH turun drastis ke 5.5.`,
-    task:'Analisis data tersebut berdasarkan prinsip koagulasi dan flokulasi. Jelaskan mengapa Tabung C justru tidak se-jernih Tabung B meskipun diberi tawas paling banyak!',
-    hint:'Petunjuk: Jelaskan fenomena re-stabilisasi muatan koloid yang terjadi pada Tabung C.'
-  },
-  {
-    title:'Reviewing the Problem — Meninjau Ulang',
-    context:`Menjernihkan air tidak cukup hanya secara visual, tetapi parameter keamanan air (seperti pH) juga harus dipertimbangkan. Standar air bersih memiliki rentang pH 6.5–8.5.`,
-    task:'Tinjau kembali analisis dan jawabanmu sebelumnya. Apakah penjernihan air yang sukses hanya dilihat dari hilangnya kekeruhan? Apa risikonya jika PDAM sembarangan memperbanyak dosis tawas?',
-    hint:'Petunjuk: Periksa aspek keseimbangan antara efektivitas flokulasi kimia dengan kualitas pH air konsumsi.'
-  },
-  {
-    title:'Extending the Problem — Memperluas Masalah',
-    context:`Prinsip netralisasi muatan koloid juga banyak digunakan pada industri lain atau pengelolaan limbah cair pabrik agar partikel limbah berat dapat terkoagulasi dan disaring sebelum dibuang.`,
-    task:'Hubungkan prinsip Koagulasi-Flokulasi pada PDAM ini dengan satu penerapan lain yang bermanfaat. Misalnya pada pengolahan limbah atau pengendapan getah karet (lateks).',
-    hint:'Petunjuk: Jelaskan secara singkat konsep netralisasi koloid yang diterapkan pada contoh baru tersebut.'
-  }
+  { title:'Reading — Membaca Wacana', context:`<b>Rahasia Tawas dalam Penjernihan Air di Kota Tepian</b><br><br>Air Sungai Mahakam merupakan sistem koloid yang sangat stabil. Stabilitas ini disebabkan oleh partikel lumpur mikroskopis yang memiliki muatan listrik sejenis (negatif), sehingga mereka selalu saling tolak-menolak dan enggan mengendap. Untuk mengatasi hal ini, masyarakat dan PDAM Samarinda menggunakan Tawas Al₂(SO₄)₃ sebagai agen penjernih utama.<br><br>Proses penjernihan diawali dengan mekanisme Koagulasi. Saat tawas dilarutkan ke dalam air sungai, ia melepaskan kation multivalen Al³⁺. Ion positif ini bertindak sebagai penetral; mereka akan mengadsorpsi atau menempel pada permukaan partikel lumpur yang bermuatan negatif. Ketika muatan listrik partikel telah netral, gaya tolak-menolak antar partikel hilang, memungkinkan mereka untuk saling bertumbukan dan berikatan.<br><br>Langkah selanjutnya adalah Flokulasi. Partikel-partikel yang telah netral tadi mulai bergabung membentuk gumpalan yang lebih besar dan kasar yang disebut flok. Seiring dengan bertambahnya ukuran flok, massa jenisnya menjadi lebih besar daripada air, sehingga gaya gravitasi mampu menarik gumpalan tersebut jatuh ke dasar wadah (sedimentasi).<br><br>Namun, penggunaan tawas di wilayah Samarinda memerlukan ketelitian dosis. Secara kimiawi, pelarutan tawas melepaskan ion hidrogen (H⁺) yang dapat meningkatkan keasaman air (menurunkan pH). Jika dosis yang diberikan berlebihan, tidak hanya air yang menjadi asam, tetapi dapat terjadi fenomena re-stabilisasi. Dalam kondisi ini, partikel lumpur justru akan bermuatan positif kembali karena tertutup lapisan ion Al³⁺ yang berlebih, menyebabkan partikel kembali tolak-menolak dan air tetap keruh. Oleh karena itu, penentuan dosis optimal melalui uji laboratorium sangat penting untuk mendapatkan air bersih yang aman bagi warga Kota Samarinda.`, task:'Tuliskan tiga (3) informasi ilmiah penting dari wacana tentang proses penjernihan air (penggunaan tawas) di atas.', hint:'Petunjuk: Fokus pada ion yang dilepaskan, tahapan koagulasi-flokulasi, dan masalah dosis berlebih.' },
+  { title:'Identifying the Problem — Merumuskan Masalah', context:`Penambahan tawas dalam air keruh tidak selamanya langsung membuahkan hasil jernih yang baik. Seperti yang disebutkan dalam wacana, ada batasan dosis agar fenomena "re-stabilisasi" tidak terjadi.`, task:'Rumuskan masalah ilmiah terkait dosis tawas dan tingkat keasaman (pH) air dalam bentuk pertanyaan.', hint:'Petunjuk: Pertimbangkan hubungan antara konsentrasi bahan kimia dengan stabilitas koloid serta kualitas pH akhir.' },
+  { title:'Constructing the Solution — Menyusun Hipotesis', context:`Koagulasi terjadi optimal ketika muatan partikel koloid tepat dinetralkan (isoelectric point). Jika ion Al³⁺ dari tawas terlalu sedikit, koagulasi tidak terjadi. Jika terlalu banyak, partikel akan diselimuti muatan positif dan kembali tolak-menolak.`, task:'Susun hipotesis tentang bagaimana perbedaan dosis tawas (kurang, pas, berlebih) akan memengaruhi kekeruhan akhir dan pH air. Sertakan alasan ilmiahmu!', hint:'Petunjuk: Kaitkan hipotesismu dengan prinsip adsorpsi muatan berlawanan dan pelepasan ion H⁺.' },
+  { title:'Solving the Problem — Memecahkan Masalah', context:`Di lab PDAM, teknisi mencatat: Tabung A (tawas 10mg/L) = air lambat jernih, pH 7.1. Tabung B (tawas 30mg/L) = air sangat jernih, flok besar, pH 6.8. Tabung C (tawas 80mg/L) = air kembali agak keruh (tidak membentuk flok besar), pH turun drastis ke 5.5.`, task:'Analisis data tersebut berdasarkan prinsip koagulasi dan flokulasi. Jelaskan mengapa Tabung C justru tidak se-jernih Tabung B meskipun diberi tawas paling banyak!', hint:'Petunjuk: Jelaskan fenomena re-stabilisasi muatan koloid yang terjadi pada Tabung C.' },
+  { title:'Reviewing the Problem — Meninjau Ulang', context:`Menjernihkan air tidak cukup hanya secara visual, tetapi parameter keamanan air (seperti pH) juga harus dipertimbangkan. Standar air bersih memiliki rentang pH 6.5–8.5.`, task:'Tinjau kembali analisis dan jawabanmu sebelumnya. Apakah penjernihan air yang sukses hanya dilihat dari hilangnya kekeruhan? Apa risikonya jika PDAM sembarangan memperbanyak dosis tawas?', hint:'Petunjuk: Periksa aspek keseimbangan antara efektivitas flokulasi kimia dengan kualitas pH air konsumsi.' },
+  { title:'Extending the Problem — Memperluas Masalah', context:`Prinsip netralisasi muatan koloid juga banyak digunakan pada industri lain atau pengelolaan limbah cair pabrik agar partikel limbah berat dapat terkoagulasi dan disaring sebelum dibuang.`, task:'Hubungkan prinsip Koagulasi-Flokulasi pada PDAM ini dengan satu penerapan lain yang bermanfaat. Misalnya pada pengolahan limbah atau pengendapan getah karet (lateks).', hint:'Petunjuk: Jelaskan secara singkat konsep netralisasi koloid yang diterapkan pada contoh baru tersebut.' },
 ];
 
 function renderRicosre(session) {
@@ -925,7 +1113,7 @@ function renderRicosre(session) {
         </div>
       </div>`;
     document.getElementById(navId).innerHTML = '';
-    if(session===1) { state.p2MateriDone = false; buildNav(); updateHomeCards(); }
+    if(session===1) { buildNav(); updateHomeCards(); }
     return;
   }
 
@@ -959,11 +1147,13 @@ async function ricoNav(session, dir) {
 
   if(dir === 1) {
     const val = document.getElementById(`ricoAnswer${session}_${curStep}`).value.trim();
-    if(!val) { alert('❗ Tuliskan jawabanmu terlebih dahulu!'); return; }
+    if(!val) { showToast('❗ Tuliskan jawabanmu terlebih dahulu!'); return; }
     answers[curStep] = val;
     const nextStep = curStep + 1;
     if(session===1) state.p1RicosreStep = nextStep;
     else state.p2RicosreStep = nextStep;
+
+    saveState();
 
     if(state.siswa) {
       const s = state.siswa;
@@ -977,16 +1167,18 @@ async function ricoNav(session, dir) {
         timestamp: getTimestamp()
       });
     }
+    showToast('💾 Jawaban tersimpan!');
   } else {
     const nextStep = Math.max(0, curStep - 1);
     if(session===1) state.p1RicosreStep = nextStep;
     else state.p2RicosreStep = nextStep;
+    saveState();
   }
 
   buildNav(); updateHomeCards();
   renderRicosre(session);
-  if(session===1 && state.p1RicosreStep > 0) state.p1MateriDone = true;
-  if(session===2 && state.p2RicosreStep > 0) state.p2MateriDone = true;
+  if(session===1 && state.p1RicosreStep > 0) { state.p1MateriDone = true; saveState(); }
+  if(session===2 && state.p2RicosreStep > 0) { state.p2MateriDone = true; saveState(); }
 }
 
 function renderProfil() {
@@ -1038,32 +1230,39 @@ function renderProfil() {
         Pretest: ${Math.round(state.pretestScore/PRETEST_Q.length*100)}% → Posttest: ${Math.round(state.posttestScore/POSTTEST_Q.length*100)}%
         ${state.posttestScore > state.pretestScore ? ' ✅ Ada peningkatan!' : ' 📚 Perlu belajar lebih giat.'}
       </p>
-    </div>` : ''}`;
+    </div>` : ''}
+    <div class="btn-row" style="margin-top:1.5rem;">
+      <button class="btn btn-secondary btn-sm" onclick="if(confirm('Reset semua data progress? Data absensi dan jawaban akan terhapus.')) { localStorage.removeItem('${LS_KEY}'); location.reload(); }">🗑️ Reset Data</button>
+    </div>`;
 }
 
-const origGoPage = window.goPage;
-function markMateriDone(id) {
-  if(id === 'p1-ricosre') state.p1MateriDone = true;
-  if(id === 'p2-ricosre') state.p2MateriDone = true;
-}
-window.goPage = function(id) {
-  markMateriDone(id);
-  if(!isUnlocked(id)) { alert('🔒 Selesaikan tahap sebelumnya terlebih dahulu!'); return; }
+// ═══════════════════════════════════════════
+//  INIT — restore state on load
+// ═══════════════════════════════════════════
+(function init() {
+  // Restore active page
+  const pg = state.currentPage || 'home';
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + id).classList.add('active');
-  state.currentPage = id;
+  const targetPage = document.getElementById('page-' + pg);
+  if(targetPage) targetPage.classList.add('active');
+
+  restoreAbsensiUI();
   buildNav();
   updateHomeCards();
-  window.scrollTo(0, 0);
-  if(id === 'pretest' && !state.pretestDone) renderQuiz('pretest');
-  if(id === 'posttest' && !state.posttestDone) renderQuiz('posttest');
-  if(id === 'p1-ricosre') renderRicosre(1);
-  if(id === 'p2-ricosre') renderRicosre(2);
-  if(id === 'profil') renderProfil();
-};
 
-buildNav();
-updateHomeCards();
+  // Re-render dynamic pages
+  if(pg === 'pretest') {
+    if(state.pretestDone) renderQuizResult('pretest');
+    else renderQuiz('pretest');
+  }
+  if(pg === 'posttest') {
+    if(state.posttestDone) renderQuizResult('posttest');
+    else renderQuiz('posttest');
+  }
+  if(pg === 'p1-ricosre') renderRicosre(1);
+  if(pg === 'p2-ricosre') renderRicosre(2);
+  if(pg === 'profil') renderProfil();
+})();
 </script>
 </body>
 </html>
