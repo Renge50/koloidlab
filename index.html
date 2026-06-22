@@ -14,6 +14,7 @@
   --shadow: 0 4px 24px rgba(15,155,142,0.12);
 }
 * { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
 body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; overflow-x:hidden; }
 
 /* ── SHELL ── */
@@ -58,7 +59,8 @@ nav {
 .page-sub { color:var(--text-muted); font-size:0.95rem; line-height:1.7; max-width:560px; margin:0 auto; }
 
 /* ── CARDS ── */
-.card { background:white; border-radius:20px; border:1px solid var(--border); padding:1.75rem; margin-bottom:1.25rem; }
+.card { background:white; border-radius:20px; border:1px solid var(--border); padding:1.75rem; margin-bottom:1.25rem; transition: box-shadow 0.3s ease;}
+.card:hover { box-shadow: var(--shadow); }
 .card h3 { font-family:'Playfair Display',serif; font-size:1.15rem; color:var(--teal); margin-bottom:0.75rem; }
 .card p { font-size:0.9rem; color:var(--text-muted); line-height:1.7; }
 
@@ -73,9 +75,9 @@ nav {
   border-radius:10px; font-size:0.7rem; font-weight:600;
   color:var(--text-muted); transition:all 0.3s; min-width:70px;
 }
-.step-dot.active { background:var(--teal); color:white; }
+.step-dot.active { background:var(--teal); color:white; transform: scale(1.05); }
 .step-dot.done { color:var(--teal); background:rgba(15,155,142,0.08); }
-.step-dot .step-letter { font-size:1rem; display:block; }
+.step-dot .step-letter { font-size:1rem; display:block; margin-bottom:0.2rem; }
 
 /* ── RICOSRE TASK CARD ── */
 .ricosre-task {
@@ -95,9 +97,9 @@ nav {
   width:100%; border-radius:12px; border:1.5px solid var(--border);
   padding:0.9rem 1rem; font-family:'DM Sans',sans-serif;
   font-size:0.9rem; color:var(--text); resize:vertical; min-height:100px;
-  background:white; transition:border-color 0.2s;
+  background:white; transition:border-color 0.2s, box-shadow 0.2s;
 }
-.answer-box:focus { outline:none; border-color:var(--teal); }
+.answer-box:focus { outline:none; border-color:var(--teal); box-shadow: 0 0 0 3px rgba(15,155,142,0.1); }
 .answer-box.saved { border-color:#10b981; background:rgba(16,185,129,0.04); }
 
 /* ── BUTTONS ── */
@@ -139,22 +141,23 @@ nav {
   background:white; font-family:'DM Sans',sans-serif; font-size:0.88rem; color:var(--text);
   cursor:pointer; text-align:left; transition:all 0.2s; display:flex; align-items:center; gap:0.7rem;
 }
-.quiz-opt:hover:not(:disabled) { border-color:var(--teal); background:rgba(15,155,142,0.04); }
+.quiz-opt:hover:not(:disabled) { border-color:var(--teal); background:rgba(15,155,142,0.04); transform: translateX(4px); }
 .quiz-opt.correct { border-color:#10b981; background:rgba(16,185,129,0.08); color:#065f46; }
 .quiz-opt.wrong { border-color:#ef4444; background:rgba(239,68,68,0.08); color:#7f1d1d; }
-.quiz-opt:disabled { cursor:not-allowed; }
+.quiz-opt:disabled { cursor:not-allowed; transform: none; }
 .opt-letter { width:26px; height:26px; border-radius:50%; border:2px solid currentColor; display:flex; align-items:center; justify-content:center; font-size:0.72rem; font-weight:700; flex-shrink:0; }
-.quiz-feedback { margin-top:1rem; padding:0.9rem 1.1rem; border-radius:10px; font-size:0.87rem; line-height:1.6; display:none; }
+.quiz-feedback { margin-top:1rem; padding:0.9rem 1.1rem; border-radius:10px; font-size:0.87rem; line-height:1.6; display:none; animation: fadeIn 0.3s ease;}
 .quiz-feedback.show { display:block; }
-.quiz-feedback.ok { background:rgba(16,185,129,0.1); color:#065f46; }
-.quiz-feedback.bad { background:rgba(239,68,68,0.08); color:#7f1d1d; }
+.quiz-feedback.ok { background:rgba(16,185,129,0.1); color:#065f46; border-left: 3px solid #10b981;}
+.quiz-feedback.bad { background:rgba(239,68,68,0.08); color:#7f1d1d; border-left: 3px solid #ef4444;}
 .quiz-nav-row { display:flex; justify-content:space-between; align-items:center; margin-top:1.25rem; }
 .quiz-score-label { font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; color:var(--teal); }
 .quiz-result { text-align:center; padding:2rem 1rem; }
-.result-emoji { font-size:3.5rem; margin-bottom:0.75rem; }
+.result-emoji { font-size:3.5rem; margin-bottom:0.75rem; animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 .result-title { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:900; color:var(--text); margin-bottom:0.4rem; }
 .result-big { font-family:'Playfair Display',serif; font-size:2.8rem; font-weight:900; color:var(--teal); }
 .result-pct { font-size:1rem; color:var(--text-muted); margin-bottom:1rem; }
+@keyframes pop { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
 /* ── COMPARISON TABLE ── */
 .comp-table { width:100%; border-collapse:collapse; border-radius:14px; overflow:hidden; border:1px solid var(--border); }
@@ -165,7 +168,8 @@ nav {
 
 /* ── JENIS KOLOID GRID ── */
 .jenis-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:0.75rem; margin-top:1rem; }
-.jenis-card { background:white; border-radius:12px; padding:0.9rem; border:1px solid var(--border); text-align:center; }
+.jenis-card { background:white; border-radius:12px; padding:0.9rem; border:1px solid var(--border); text-align:center; transition: transform 0.2s;}
+.jenis-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
 .jenis-card .emoji { font-size:1.6rem; margin-bottom:0.4rem; }
 .jenis-card h5 { font-size:0.82rem; font-weight:600; color:var(--teal); margin-bottom:0.2rem; }
 .jenis-card .ph { font-family:'DM Mono',monospace; font-size:0.7rem; color:var(--text-muted); }
@@ -173,15 +177,11 @@ nav {
 
 /* ── SIFAT LIST ── */
 .sifat-list { display:flex; flex-direction:column; gap:0.75rem; margin-top:0.75rem; }
-.sifat-item { background:white; border-radius:12px; padding:1rem 1.25rem; border:1px solid var(--border); display:flex; gap:0.75rem; align-items:flex-start; }
+.sifat-item { background:white; border-radius:12px; padding:1rem 1.25rem; border:1px solid var(--border); display:flex; gap:0.75rem; align-items:flex-start; transition: border-color 0.2s;}
+.sifat-item:hover { border-color: rgba(15,155,142,0.4); }
 .sifat-icon { font-size:1.3rem; flex-shrink:0; }
 .sifat-item h5 { font-size:0.9rem; font-weight:600; color:var(--teal); margin-bottom:0.2rem; }
 .sifat-item p { font-size:0.83rem; color:var(--text-muted); line-height:1.6; }
-
-/* ── LOCKED OVERLAY ── */
-.locked-msg { text-align:center; padding:3rem 2rem; color:var(--text-muted); }
-.locked-msg .lock-icon { font-size:3rem; margin-bottom:1rem; }
-.locked-msg h3 { font-family:'Playfair Display',serif; font-size:1.4rem; color:var(--text); margin-bottom:0.5rem; }
 
 /* ── HERO page ── */
 .hero-section { padding:1.5rem 0 2.5rem; text-align:center; }
@@ -200,20 +200,19 @@ nav {
 .action-card .ac-icon { font-size:2rem; margin-bottom:0.75rem; }
 .action-card h4 { font-size:0.95rem; font-weight:700; color:var(--text); margin-bottom:0.3rem; }
 .action-card p { font-size:0.78rem; color:var(--text-muted); }
-.action-card.locked-card { opacity:0.5; cursor:not-allowed; }
-.action-card.locked-card:hover { transform:none; box-shadow:none; }
+.action-card.locked-card { opacity:0.5; cursor:not-allowed; filter: grayscale(100%); }
+.action-card.locked-card:hover { transform:none; box-shadow:none; border-color:var(--border); }
 
 /* ── BADGE DONE ── */
 .badge-done { display:inline-flex; align-items:center; gap:0.3rem; background:rgba(16,185,129,0.1); color:#10b981; border:1px solid rgba(16,185,129,0.2); border-radius:20px; padding:0.25rem 0.75rem; font-size:0.72rem; font-weight:700; }
-.badge-locked { display:inline-flex; align-items:center; gap:0.3rem; background:rgba(100,100,100,0.08); color:var(--text-muted); border:1px solid rgba(100,100,100,0.15); border-radius:20px; padding:0.25rem 0.75rem; font-size:0.72rem; font-weight:700; }
 
 /* ── SECTION LABEL ── */
 .sec-label { font-size:0.7rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--teal); margin-bottom:0.5rem; }
-.sec-title { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:900; color:var(--text); margin-bottom:0.75rem; }
 
 /* ── INFO GRID ── */
 .info-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1rem; margin-top:1rem; }
-.info-card { background:white; border-radius:14px; padding:1.25rem; border:1px solid var(--border); }
+.info-card { background:white; border-radius:14px; padding:1.25rem; border:1px solid var(--border); transition: transform 0.2s; }
+.info-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
 .info-card h4 { font-size:0.92rem; font-weight:700; color:var(--teal); margin-bottom:0.5rem; }
 .info-card p { font-size:0.85rem; color:var(--text-muted); line-height:1.6; }
 
@@ -371,7 +370,7 @@ nav {
   </div>
 </div>
 
-<!-- ══ CAPAIAN & TUJUAN PEMBELAJARAN (NEW) ══ -->
+<!-- ══ CAPAIAN & TUJUAN PEMBELAJARAN ══ -->
 <div class="page" id="page-cp-tp">
   <div class="page-header">
     <div class="page-badge">🎯 Peta Belajar</div>
@@ -379,7 +378,6 @@ nav {
     <p class="page-sub">Sebelum mulai, pahami dulu apa yang akan kamu capai dan kuasai setelah mengikuti pembelajaran ini.</p>
   </div>
 
-  <!-- Capaian Pembelajaran -->
   <div class="cp-hero">
     <h3>📋 Capaian Pembelajaran</h3>
     <p>
@@ -387,7 +385,6 @@ nav {
     </p>
   </div>
 
-  <!-- Divider -->
   <div class="cp-divider">
     <div class="cp-divider-line"></div>
     <div class="cp-divider-label">🎯 Tujuan Pembelajaran</div>
@@ -424,7 +421,6 @@ nav {
     </div>
   </div>
 
-  <!-- Info singkat RICOSRE -->
   <div class="card" style="background: linear-gradient(135deg, rgba(15,155,142,0.05), rgba(245,158,11,0.04));">
     <h3>🧪 Apa itu Model RICOSRE?</h3>
     <p style="margin-bottom:1rem;">Pembelajaran ini menggunakan model <strong>RICOSRE</strong> — sebuah pendekatan saintifik berbasis literasi sains dengan 6 tahap terstruktur:</p>
@@ -440,7 +436,7 @@ nav {
 
   <div class="btn-row" style="justify-content:space-between; margin-top:0.5rem;">
     <button class="btn btn-secondary btn-sm" onclick="goPage('absensi')">← Kembali</button>
-    <button class="btn btn-primary" onclick="goPage('pretest')">📝 Lanjut ke Pretest →</button>
+    <button class="btn btn-primary" id="cptp-next-btn" onclick="goPage('pretest')">📝 Lanjut ke Pretest →</button>
   </div>
 </div>
 
@@ -613,7 +609,7 @@ nav {
   </div>
 
   <div class="btn-row" style="justify-content:space-between; margin-top:1.5rem;">
-    <button class="btn btn-secondary btn-sm" onclick="goPage('p1-ricosre')">← Pertemuan 1</button>
+    <button class="btn btn-secondary btn-sm" onclick="goPage('home')">← Ke Beranda</button>
     <button class="btn btn-primary" onclick="goPage('p2-ricosre')">Lanjut ke RICOSRE Pertemuan 2 →</button>
   </div>
 </div>
@@ -726,7 +722,7 @@ const state = {
 loadState();
 
 // ═══════════════════════════════════════════
-//  NAV CONFIG
+//  NAV CONFIG & LOGIKA UNLOCK (DIPERBAIKI)
 // ═══════════════════════════════════════════
 const NAV_ITEMS = [
   { id:'home',      label:'🏠 Beranda' },
@@ -752,25 +748,25 @@ function isUnlocked(id) {
       return true;
 
     case 'cp-tp':
-      return !!state.siswa;
-
     case 'pretest':
       return !!state.siswa;
 
     case 'p1-materi':
-      return state.pretestDone && pertemuanAktif === '1';
-
-    case 'p1-ricosre':
-      return state.p1MateriDone && pertemuanAktif === '1';
+      // Pertemuan 1 WAJIB pretest
+      return state.pretestDone;
 
     case 'p2-materi':
-      return state.pretestDone;
+      // Pertemuan 2 BEBAS pretest. Pertemuan 1 tetap wajib.
+      return !!state.siswa && (pertemuanAktif === '2' || state.pretestDone);
+
+    case 'p1-ricosre':
+      return state.p1MateriDone;
 
     case 'p2-ricosre':
       return state.p2MateriDone;
 
     case 'posttest':
-      return state.p2RicosreStep >= 6;
+      return state.p2RicosreStep >= 6 || state.p1RicosreStep >= 6; 
 
     case 'profil':
       return true;
@@ -794,12 +790,32 @@ function buildNav() {
   }).join('');
 }
 
+// UPDATE TOMBOL ARAHAN BERDASARKAN PERTEMUAN
+function updateCpTpButton() {
+  const btn = document.getElementById('cptp-next-btn');
+  if(!btn || !state.siswa) return;
+  if(state.siswa.pertemuan === '2') {
+    btn.innerHTML = '📚 Lanjut ke Materi 2 →';
+    btn.setAttribute('onclick', "goPage('p2-materi')");
+  } else {
+    btn.innerHTML = '📝 Lanjut ke Pretest →';
+    btn.setAttribute('onclick', "goPage('pretest')");
+  }
+}
+
+function markMateriDone(id) {
+  if(id === 'p1-materi') state.p1MateriDone = true;
+  if(id === 'p2-materi') state.p2MateriDone = true;
+}
+
 function goPage(id) {
   if(!isUnlocked(id)) {
     showToast('🔒 Selesaikan tahap sebelumnya terlebih dahulu!');
     return;
   }
+  
   markMateriDone(id);
+  
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
   state.currentPage = id;
@@ -815,11 +831,6 @@ function goPage(id) {
   if(id === 'profil') renderProfil();
   if(id === 'pretest' && state.pretestDone) renderQuizResult('pretest');
   if(id === 'posttest' && state.posttestDone) renderQuizResult('posttest');
-}
-
-function markMateriDone(id) {
-  if(id === 'p1-materi') state.p1MateriDone = true;
-  if(id === 'p2-materi') state.p2MateriDone = true;
 }
 
 function updateHomeCards() {
@@ -876,6 +887,8 @@ async function simpanAbsensi() {
 
   state.siswa = { name, no, kelas, pertemuan };
   saveState();
+  updateCpTpButton(); // Update tombol setelah absen
+  
   await sendToSheets({ type: 'absensi', name, no, kelas, pertemuan, timestamp: getTimestamp() });
 
   document.getElementById('absensiForm').style.display = 'none';
@@ -887,7 +900,6 @@ async function simpanAbsensi() {
   buildNav(); updateHomeCards();
 }
 
-// Restore absensi UI if data already exists
 function restoreAbsensiUI() {
   if(!state.siswa) return;
   const s = state.siswa;
@@ -902,6 +914,8 @@ function restoreAbsensiUI() {
   if(saved) saved.style.display = 'block';
   if(next) next.style.display = 'flex';
   if(info) info.textContent = `${s.name} · No. ${s.no} · ${s.kelas} · Pertemuan ${s.pertemuan}`;
+  
+  updateCpTpButton(); // Pastikan tombol selalu diperbarui setiap reload
 }
 
 // ═══════════════════════════════════════════
@@ -1105,9 +1119,9 @@ function renderRicosre(session) {
   if(curStep >= 6) {
     document.getElementById(contentId).innerHTML = `
       <div class="card" style="text-align:center; padding:2.5rem;">
-        <div style="font-size:3rem; margin-bottom:1rem;">🎉</div>
+        <div style="font-size:3rem; margin-bottom:1rem; animation: pop 0.5s ease;">🎉</div>
         <h3 style="color:var(--teal); font-size:1.4rem; margin-bottom:0.5rem;">RICOSRE Pertemuan ${session} Selesai!</h3>
-        <p style="color:var(--text-muted);">Kamu telah menyelesaikan 6 tahap RICOSRE dengan baik. Lanjut ke ${session===1?'Materi Pertemuan 2':'Posttest'}!</p>
+        <p style="color:var(--text-muted);">Kamu telah menyelesaikan 6 tahap RICOSRE dengan baik. Lanjut ke tahap berikutnya!</p>
         <div class="btn-row" style="justify-content:center; margin-top:1.5rem;">
           <button class="btn btn-primary" onclick="goPage('${session===1?'p2-materi':'posttest'}')">${session===1?'📚 Materi Pertemuan 2 →':'🏁 Kerjakan Posttest →'}</button>
         </div>
@@ -1177,8 +1191,6 @@ async function ricoNav(session, dir) {
 
   buildNav(); updateHomeCards();
   renderRicosre(session);
-  if(session===1 && state.p1RicosreStep > 0) { state.p1MateriDone = true; saveState(); }
-  if(session===2 && state.p2RicosreStep > 0) { state.p2MateriDone = true; saveState(); }
 }
 
 function renderProfil() {
