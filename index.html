@@ -30,7 +30,9 @@ nav {
 }
 .nav-logo { font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:900; color:var(--teal); }
 .nav-logo span { color:var(--amber); }
-.nav-steps { display:flex; gap:0.2rem; }
+
+/* Navigasi Desktop */
+.nav-steps { display:flex; gap:0.2rem; align-items:center; }
 .nav-pill {
   font-size:0.72rem; font-weight:600; padding:0.3rem 0.7rem;
   border-radius:20px; color:var(--text-muted); cursor:pointer;
@@ -39,6 +41,25 @@ nav {
 .nav-pill.active { background:var(--teal); color:white; }
 .nav-pill.done { color:var(--teal); border-color:rgba(15,155,142,0.3); }
 .nav-pill.locked { opacity:0.4; cursor:not-allowed; }
+
+/* Hamburger Menu Icon (Mobile) */
+.hamburger {
+  display:none; cursor:pointer; flex-direction:column; gap:4px; padding:0.5rem;
+}
+.hamburger div { width:24px; height:2px; background:var(--teal); transition:0.3s; border-radius:2px; }
+
+/* Mobile Menu Dropdown */
+.mobile-menu {
+  display:none; position:fixed; top:58px; left:0; right:0; background:white;
+  border-bottom:1px solid var(--border); box-shadow:0 4px 12px rgba(0,0,0,0.05);
+  z-index:199; flex-direction:column; padding:0.5rem 0;
+  transform: translateY(-100%); transition: transform 0.3s ease-in-out;
+}
+.mobile-menu.open { transform: translateY(0); display:flex; }
+.mobile-menu .nav-pill {
+  font-size:0.9rem; padding:0.75rem 1.5rem; border-radius:0; border:none; border-bottom:1px solid var(--border);
+}
+.mobile-menu .nav-pill:last-child { border-bottom:none; }
 
 /* ── PAGE CONTAINER ── */
 .page { display:none; padding:78px 1.5rem 2rem; max-width:900px; margin:0 auto; animation:fadeIn 0.4s ease; }
@@ -283,13 +304,17 @@ nav {
 }
 .toast.show { transform: translateX(-50%) translateY(0); }
 
-/* MOBILE */
-@media(max-width:640px) {
+/* MOBILE RESPONSIVE */
+@media(max-width:768px) {
   nav { padding:0 1rem; }
-  .nav-steps { display:none; }
+  .nav-steps { display:none; } /* Sembunyikan nav desktop */
+  .hamburger { display:flex; } /* Munculkan hamburger menu */
   .page { padding:68px 1rem 2rem; }
   .action-grid { grid-template-columns:1fr 1fr; }
   .tp-grid { grid-template-columns: 1fr; }
+}
+@media(max-width:480px) {
+  .action-grid { grid-template-columns:1fr; }
 }
 </style>
 </head>
@@ -299,9 +324,15 @@ nav {
 <nav>
   <div class="nav-logo">Koloid<span>Lab</span></div>
   <div class="nav-steps" id="navSteps"></div>
+  <div class="hamburger" id="hamburgerMenu" onclick="toggleMobileMenu()">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
 </nav>
 
-<!-- TOAST -->
+<div class="mobile-menu" id="mobileMenu"></div>
+
 <div class="toast" id="toast"></div>
 
 <div class="page active" id="page-home">
@@ -322,7 +353,6 @@ nav {
   </div>
 </div>
 
-<!-- ══ ABSENSI ══ -->
 <div class="page" id="page-absensi">
   <div class="page-header">
     <div class="page-badge">📋 Langkah Pertama</div>
@@ -370,7 +400,6 @@ nav {
   </div>
 </div>
 
-<!-- ══ CAPAIAN & TUJUAN PEMBELAJARAN ══ -->
 <div class="page" id="page-cp-tp">
   <div class="page-header">
     <div class="page-badge">🎯 Peta Belajar</div>
@@ -440,7 +469,6 @@ nav {
   </div>
 </div>
 
-<!-- ══ PETUNJUK ══ -->
 <div class="page" id="page-petunjuk">
   <div class="page-header">
     <div class="page-badge">📌 Panduan</div>
@@ -463,7 +491,6 @@ nav {
   </div>
 </div>
 
-<!-- ══ PRETEST ══ -->
 <div class="page" id="page-pretest">
   <div class="page-header">
     <div class="page-badge">📝 Sebelum Belajar</div>
@@ -475,7 +502,6 @@ nav {
   </div>
 </div>
 
-<!-- ══ MATERI P1 ══ -->
 <div class="page" id="page-p1-materi">
   <div class="page-header">
     <div class="page-badge">📚 Pertemuan 1</div>
@@ -553,7 +579,6 @@ nav {
   </div>
 </div>
 
-<!-- ══ RICOSRE P1 ══ -->
 <div class="page" id="page-p1-ricosre">
   <div class="page-header">
     <div class="page-badge">🧪 RICOSRE — Pertemuan 1</div>
@@ -565,7 +590,6 @@ nav {
   <div class="btn-row" style="margin-top:1.5rem;" id="p1StepNav"></div>
 </div>
 
-<!-- ══ MATERI P2 ══ -->
 <div class="page" id="page-p2-materi">
   <div class="page-header">
     <div class="page-badge">📚 Pertemuan 2</div>
@@ -614,7 +638,6 @@ nav {
   </div>
 </div>
 
-<!-- ══ RICOSRE P2 ══ -->
 <div class="page" id="page-p2-ricosre">
   <div class="page-header">
     <div class="page-badge">🧪 RICOSRE — Pertemuan 2</div>
@@ -626,7 +649,6 @@ nav {
   <div class="btn-row" style="margin-top:1.5rem;" id="p2StepNav"></div>
 </div>
 
-<!-- ══ POSTTEST ══ -->
 <div class="page" id="page-posttest">
   <div class="page-header">
     <div class="page-badge">🏁 Evaluasi Akhir</div>
@@ -638,7 +660,6 @@ nav {
   </div>
 </div>
 
-<!-- ══ PROFIL ══ -->
 <div class="page" id="page-profil">
   <div class="page-header">
     <div class="page-badge">👤 Profil</div>
@@ -649,9 +670,7 @@ nav {
   </div>
 </div>
 
-</div><!-- #app -->
-
-<script>
+</div><script>
 // ═══════════════════════════════════════════
 //  LOCALSTORAGE KEYS
 // ═══════════════════════════════════════════
@@ -722,7 +741,7 @@ const state = {
 loadState();
 
 // ═══════════════════════════════════════════
-//  NAV CONFIG & LOGIKA UNLOCK (DIPERBAIKI)
+//  NAV CONFIG & LOGIKA UNLOCK
 // ═══════════════════════════════════════════
 const NAV_ITEMS = [
   { id:'home',      label:'🏠 Beranda' },
@@ -752,11 +771,9 @@ function isUnlocked(id) {
       return !!state.siswa;
 
     case 'p1-materi':
-      // Pertemuan 1 WAJIB pretest
       return state.pretestDone;
 
     case 'p2-materi':
-      // Pertemuan 2 BEBAS pretest. Pertemuan 1 tetap wajib.
       return !!state.siswa && (pertemuanAktif === '2' || state.pretestDone);
 
     case 'p1-ricosre':
@@ -776,9 +793,11 @@ function isUnlocked(id) {
   }
 }
 
+// FUNGSI UNTUK MERENDER NAVIGASI (Desktop & Mobile)
 function buildNav() {
-  const wrap = document.getElementById('navSteps');
-  wrap.innerHTML = NAV_ITEMS.map(n => {
+  // Render Desktop Menu
+  const wrapDesktop = document.getElementById('navSteps');
+  wrapDesktop.innerHTML = NAV_ITEMS.map(n => {
     const unlocked = isUnlocked(n.id);
     const active = state.currentPage === n.id;
     let cls = 'nav-pill';
@@ -788,6 +807,30 @@ function buildNav() {
     const onclick = unlocked ? `goPage('${n.id}')` : '';
     return `<div class="${cls}" ${onclick ? `onclick="${onclick}"` : ''}>${n.label}</div>`;
   }).join('');
+
+  // Render Mobile Menu
+  const wrapMobile = document.getElementById('mobileMenu');
+  wrapMobile.innerHTML = NAV_ITEMS.map(n => {
+    const unlocked = isUnlocked(n.id);
+    const active = state.currentPage === n.id;
+    let cls = 'nav-pill';
+    if(active) cls += ' active';
+    else if(!unlocked) cls += ' locked';
+    else cls += ' done';
+    const onclick = unlocked ? `goPage('${n.id}'); closeMobileMenu();` : 'showToast(\"🔒 Selesaikan tahap sebelumnya!\"); closeMobileMenu();';
+    return `<button class="${cls}" onclick="${onclick}" ${!unlocked ? 'disabled style="background:transparent; color:var(--text-muted); opacity:0.5;"' : (active ? 'style="background:rgba(15,155,142,0.1); color:var(--teal);"' : 'style="background:transparent;"')}>${n.label}${!unlocked ? ' 🔒' : ''}</button>`;
+  }).join('');
+}
+
+// LOGIKA HAMBURGER MENU
+function toggleMobileMenu() {
+  const menu = document.getElementById('mobileMenu');
+  menu.classList.toggle('open');
+}
+
+function closeMobileMenu() {
+  const menu = document.getElementById('mobileMenu');
+  menu.classList.remove('open');
 }
 
 // UPDATE TOMBOL ARAHAN BERDASARKAN PERTEMUAN
@@ -887,7 +930,7 @@ async function simpanAbsensi() {
 
   state.siswa = { name, no, kelas, pertemuan };
   saveState();
-  updateCpTpButton(); // Update tombol setelah absen
+  updateCpTpButton(); 
   
   await sendToSheets({ type: 'absensi', name, no, kelas, pertemuan, timestamp: getTimestamp() });
 
@@ -915,7 +958,7 @@ function restoreAbsensiUI() {
   if(next) next.style.display = 'flex';
   if(info) info.textContent = `${s.name} · No. ${s.no} · ${s.kelas} · Pertemuan ${s.pertemuan}`;
   
-  updateCpTpButton(); // Pastikan tombol selalu diperbarui setiap reload
+  updateCpTpButton(); 
 }
 
 // ═══════════════════════════════════════════
